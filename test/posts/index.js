@@ -8,7 +8,7 @@ var kraken = require('kraken-js'),
     request = require('supertest');
 
 
-describe('/', function () {
+describe('/posts', function () {
 
     var app, mock;
 
@@ -32,10 +32,8 @@ describe('/', function () {
 
     it('should say "hello"', function (done) {
         request(mock)
-            .get('/')
+            .get('/posts')
             .expect(200)
-            .expect('Content-Type', /html/)
-            .expect(/Hello, /)
             .end(function (err, res) {
                 done(err);
             });
