@@ -1,7 +1,10 @@
 'use strict';
 
 var mongoose = require('mongoose');
+var connection = require('../lib/database').connection;
 var ObjectId = mongoose.Schema.Types.ObjectId;
+
+connection = mongoose;
 
 var PostSchema = new mongoose.Schema({
     title: String,
@@ -37,15 +40,22 @@ var PostSchema = new mongoose.Schema({
     updated_at: Date
 });
 
-//UserSchema.methods.customCreate = function (cb) {
-//    // console.log('in customCreate ', this.save);
-//    this.created_at = new Date();
-//    this.updated_at = new Date();
-//    this.language = 'en_US';
-//    this.description = this.description || '';
-//    this.profile_picture = this.profile_picture || '';
-//    this.save(cb);
-//};
+PostSchema.methods.customCreate = function (cb) {
+    this.status = 'ok';
+    this.votes = {
+        score: {
+            up: 0,
+            down: 0,
+            total: 0
+        },
+        ups: [this.author_id],
+        down:[]
+    };
+    this.comments = [];
+    this.created_at = new Date();
+    this.updated_at = new Date();
+    this.save(cb);
+};
 
 
 //UserSchema.methods.toto = ...
