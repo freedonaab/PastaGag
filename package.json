@@ -20,7 +20,9 @@
     "mongoose": "^3.8.21",
     "node-sass": "^0.8.4",
     "passport": "^0.2.1",
-    "should": "^4.4.1"
+    "request": "^2.51.0",
+    "should": "^4.4.1",
+    "superagent": "^0.21.0"
   },
   "devDependencies": {
     "browserify": "^3.46.1",

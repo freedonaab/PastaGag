@@ -29,7 +29,7 @@ describe('users', function () {
         app.use(kraken({
             basedir: process.cwd(),
             onconfig: function (config, next) {
-                db.config(config.get('database'));
+                db.config(config.get('database')['test']);
                 next(null, config);
             }
         }));

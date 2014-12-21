@@ -44,9 +44,9 @@ PostSchema.methods.customCreate = function (cb) {
     this.status = 'ok';
     this.votes = {
         score: {
-            up: 0,
+            up: 1,
             down: 0,
-            total: 0
+            total: 1
         },
         ups: [this.author_id],
         down:[]
