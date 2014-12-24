@@ -3,6 +3,7 @@
 var async = require('async');
 var utils = require('../../lib/utils');
 var urlCheck = require('../../lib/urlCheck');
+var ranking = require('../../lib/ranking');
 
 var PostsModel = require('../../models/posts');
 var UsersModel = require('../../models/users');
@@ -39,7 +40,7 @@ module.exports = function (router) {
                 UsersModel.findById(post_datas.author_id, function (err, doc) {
                     //console.log('after UsersModel.findById', arguments);
                     if (err || !doc) {
-                        next('not found');
+                        next(utils.json.NotFound(post_datas.author_id, 'User'));
                     } else {
                         next();
                     }
@@ -79,5 +80,10 @@ module.exports = function (router) {
                 utils.respondJSON(res, utils.json.Ok({post: post}));
             }
         });
+    });
+
+
+    router.post('/:post_id/votes/down', function (req, res) {
+        res.send(req.params);
     });
 };
