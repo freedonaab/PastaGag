@@ -22,12 +22,39 @@ module.exports = function (router) {
 
     });
 
+    router.get('/:post_id', function (req, res) {
+        var post_id = req.params.post_id;
+
+        if (!post_id) {
+            return utils.respondJSON(res, utils.json.BadRequest('url param post_id is required'));
+        }
+
+        PostsModel.findById(post_id, function (err, post) {
+            if (err) {
+                utils.respondJSON(res, utils.json.ServerError('err occurred in mongodb: '+err));
+            } else if (!post) {
+                utils.respondJSON(res, utils.json.NotFound(post_id, 'Post'));
+            } else {
+                utils.respondJSON(res, utils.json.Ok({ post: post }));
+            }
+        });
+
+    });
+
     router.post('/', function (req, res) {
         var post_datas = null;
         if (req.body.data && req.body.data.post) {
             post_datas = req.body.data.post;
         } else {
             return utils.respondJSON(res,  utils.json.BadRequest('field post is required'));
+        }
+
+        if (!post_datas.title) {
+            return utils.respondJSON(res,  utils.json.BadRequest('field post.title is required'));
+        }
+
+        if (!post_datas.content) {
+            return utils.respondJSON(res,  utils.json.BadRequest('field post.content is required'));
         }
 
         console.log('POST /posts', post_datas);

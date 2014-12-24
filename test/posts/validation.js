@@ -21,7 +21,8 @@ describe('/posts', function () {
 
     afterEach(testUtils.afterEach(config));
 
-    it('dummy test 1', function (done) {
+
+    it('should detect missing title', function (done) {
         async.waterfall([
             testUtils.createUser(config, {
                 email: "mouloud1@hotmail.fr",
@@ -30,43 +31,214 @@ describe('/posts', function () {
             }),
             function (res, next) {
                 var userId = res.body.data.user._id;
-                // console.log(res.headers);
-                request(config.mock)
-                    .post('/posts')
-                    .set('Cookie', testUtils.mapCookies(config.res.headers['set-cookie']))
-                    .send({
-                        _csrf: config.res.body._csrf,
-                        metadata: {},
-                        data: {
-                            post: {
-                                title: "Watch this adorable little puppy die in fire",
-                                content: "http://127.0.0.1:8080/fake/images/success/123456.jpg",
-                                content_type: "image",
-                                author_id: userId
-                            }
-                        }
-                    })
-                    .expect(200, function (err, res) {
-                        //console.log("wat", res.body, res.text);
-                        should.exist(res);
-                        res.should.have.property("body");
-                        res.body.should.have.property("metadata");
-                        res.body.should.have.property("data");
-                        res.body.metadata.should.have.property("success", true);
-                        res.body.metadata.should.have.property("error", null);
-                        res.body.metadata.should.have.property("statusCode", 200);
-                        res.body.data.should.have.property("post");
-                        res.body.data.post.should.have.property("_id");
-                        res.body.data.post.should.have.property("title", "Watch this adorable little puppy die in fire");
-                        res.body.data.post.should.have.property("content", "http://127.0.0.1:8080/fake/images/success/123456.jpg");
-                        res.body.data.post.should.have.property("content_type", "image");
-                        res.body.data.post.should.have.property("created_at");
-                        res.body.data.post.should.have.property("updated_at");
-                        next(null);
-                    });
+                testUtils.createPost(config, {
+                    content: "http://127.0.0.1:8080/fake/images/success/123456.jpg",
+                    author_id: userId
+                })(next);
             }
-        ], function (err) {
+        ], function (err, res) {
+            should.exist(res);
+            res.should.have.property("body");
+            res.body.should.have.property("metadata");
+            res.body.should.have.property("data", null);
+            res.body.metadata.should.have.property("success", false);
+            res.body.metadata.should.have.property("error");
+            res.body.metadata.should.have.property("statusCode", 400);
             done();
         });
     });
+
+    it('should detect missing content', function (done) {
+        async.waterfall([
+            testUtils.createUser(config, {
+                email: "mouloud1@hotmail.fr",
+                username: "kebab94",
+                password: "wallah123"
+            }),
+            function (res, next) {
+                var userId = res.body.data.user._id;
+                testUtils.createPost(config, {
+                    title: 'a very cool post without content',
+                    author_id: userId
+                })(next);
+            }
+        ], function (err, res) {
+            should.exist(res);
+            res.should.have.property("body");
+            res.body.should.have.property("metadata");
+            res.body.should.have.property("data", null);
+            res.body.metadata.should.have.property("success", false);
+            res.body.metadata.should.have.property("error");
+            res.body.metadata.should.have.property("statusCode", 400);
+            done();
+        });
+    });
+
+    it('should detect empty title', function (done) {
+        async.waterfall([
+            testUtils.createUser(config, {
+                email: "mouloud1@hotmail.fr",
+                username: "kebab94",
+                password: "wallah123"
+            }),
+            function (res, next) {
+                var userId = res.body.data.user._id;
+                testUtils.createPost(config, {
+                    title: '',
+                    content: "http://127.0.0.1:8080/fake/images/success/123456.jpg",
+                    author_id: userId
+                })(next);
+            }
+        ], function (err, res) {
+            should.exist(res);
+            res.should.have.property("body");
+            res.body.should.have.property("metadata");
+            res.body.should.have.property("data", null);
+            res.body.metadata.should.have.property("success", false);
+            res.body.metadata.should.have.property("error");
+            res.body.metadata.should.have.property("statusCode", 400);
+            done();
+        });
+    });
+
+
+    it('should detect invalid url', function (done) {
+
+        async.waterfall([
+            testUtils.createUser(config, {
+                email: "mouloud1@hotmail.fr",
+                username: "kebab94",
+                password: "wallah123"
+            }),
+            function (res, next) {
+                var userId = res.body.data.user._id;
+                testUtils.createPost(config, {
+                    title: "I swear! this a really valid url!",
+                    content: "http://thisurldoesnotexist.com/5644854.jpg",
+                    author_id: userId
+                })(next);
+            }
+        ], function (err, res) {
+            should.exist(res);
+            res.should.have.property("body");
+            res.body.should.have.property("metadata");
+            res.body.should.have.property("data", null);
+            res.body.metadata.should.have.property("success", false);
+            res.body.metadata.should.have.property("error");
+            res.body.metadata.should.have.property("statusCode", 400);
+            done();
+        });
+    });
+
+    it('should detect unsupported file extensions', function (done) {
+
+        async.waterfall([
+            testUtils.createUser(config, {
+                email: "mouloud1@hotmail.fr",
+                username: "kebab94",
+                password: "wallah123"
+            }),
+            function (res, next) {
+                var userId = res.body.data.user._id;
+                testUtils.createPost(config, {
+                    title: "Darude - Sandstorm",
+                    content: "http://localhost:8080/5644854.mp3",
+                    author_id: userId
+                })(next);
+            }
+        ], function (err, res) {
+            should.exist(res);
+            res.should.have.property("body");
+            res.body.should.have.property("metadata");
+            res.body.should.have.property("data", null);
+            res.body.metadata.should.have.property("success", false);
+            res.body.metadata.should.have.property("error");
+            res.body.metadata.should.have.property("statusCode", 400);
+            done();
+        });
+    });
+
+    it('should detect youtube 404', function (done) {
+
+        async.waterfall([
+            testUtils.createUser(config, {
+                email: "mouloud1@hotmail.fr",
+                username: "kebab94",
+                password: "wallah123"
+            }),
+            function (res, next) {
+                var userId = res.body.data.user._id;
+                testUtils.createPost(config, {
+                    title: "Game of Thrones Saison 5 Episode 1",
+                    //TODO: uncomment this
+                    //content: "https://www.youtube.com/watch?v=dQw4w945sd4f8sdf4WgXcQ",
+                    content: "https://www.youtube.com/watch?vlol=dQw4w945sd4f8sdf4WgXcQ",
+                    author_id: userId
+                })(next);
+            }
+        ], function (err, res) {
+            should.exist(res);
+            res.should.have.property("body");
+            res.body.should.have.property("metadata");
+            res.body.should.have.property("data", null);
+            res.body.metadata.should.have.property("success", false);
+            res.body.metadata.should.have.property("error");
+            res.body.metadata.should.have.property("statusCode", 400);
+            done();
+        });
+    });
+
+
+    it('should detect invalid youtube url (without v params)', function (done) {
+
+        async.waterfall([
+            testUtils.createUser(config, {
+                email: "mouloud1@hotmail.fr",
+                username: "kebab94",
+                password: "wallah123"
+            }),
+            function (res, next) {
+                var userId = res.body.data.user._id;
+                testUtils.createPost(config, {
+                    title: "Game of Thrones Saison 5 Episode 1",
+                    content: "https://www.youtube.com/watch?vlol=dQw4w945sd4f8sdf4WgXcQ",
+                    author_id: userId
+                })(next);
+            }
+        ], function (err, res) {
+            should.exist(res);
+            res.should.have.property("body");
+            res.body.should.have.property("metadata");
+            res.body.should.have.property("data", null);
+            res.body.metadata.should.have.property("success", false);
+            res.body.metadata.should.have.property("error");
+            res.body.metadata.should.have.property("statusCode", 400);
+            done();
+        });
+    });
+
+    it('GET a post that doesnt exist should 404', function (done) {
+
+        async.waterfall([
+            testUtils.createUser(config, {
+                email: "mouloud1@hotmail.fr",
+                username: "kebab94",
+                password: "wallah123"
+            }),
+            function (post, next) {
+                testUtils.getPost(config, '549ac4656ddf2dec20065754')(next);
+            }
+        ], function (err, res) {
+            should.exist(res);
+            res.should.have.property("body");
+            res.body.should.have.property("metadata");
+            res.body.should.have.property("data", null);
+            res.body.metadata.should.have.property("success", false);
+            res.body.metadata.should.have.property("error");
+            res.body.metadata.should.have.property("statusCode", 404);
+            done();
+        });
+    });
+
+
 });

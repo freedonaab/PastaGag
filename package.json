@@ -22,7 +22,8 @@
     "passport": "^0.2.1",
     "request": "^2.51.0",
     "should": "^4.4.1",
-    "superagent": "^0.21.0"
+    "superagent": "^0.21.0",
+    "underscore": "^1.7.0"
   },
   "devDependencies": {
     "browserify": "^3.46.1",
