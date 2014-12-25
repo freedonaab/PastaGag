@@ -508,7 +508,7 @@ describe('/posts', function () {
                 testUtils.post(config, '/posts/'+postId+'/votes/down', { user_id: userId })(next);
             },
             function (_, next) {
-                testUtils.getPostWithErrorChecking(config, postId)(next);
+                testUtils.getPostWithErrorChecking(config, postId, userId)(next);
             }
         ], function (err, post) {
             should.not.exist(err);

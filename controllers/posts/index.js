@@ -1,6 +1,7 @@
 'use strict';
 
 var async = require('async');
+var _ = require('underscore');
 var utils = require('../../lib/utils');
 var urlCheck = require('../../lib/urlCheck');
 var ranking = require('../../lib/ranking');
@@ -14,19 +15,83 @@ module.exports = function (router) {
     router.get('/', function (req, res) {
 
         var query = PostsModel.find();
+        var user_id = req.query.user_id || null;
         var fields = [
             '_id', 'title', 'content', 'content_type', 'author_id', 'status',
             'votes.hotness', 'votes.score.down', 'votes.score.up', 'votes.score.total',
             'created_at', 'updated_at'
         ];
-        query.select(fields.join(' '));
-        query.exec(function (err, posts) {
+
+        async.waterfall([
+            function (next) {
+                query.select(fields.join(' '));
+                query.exec(function (err, posts) {
+                    if (err) {
+                        next(utils.json.ServerError('err occurred in mongodb: '+err));
+                    } else {
+                        var objs = _.map(posts, function (p) { return p.toObject(); });
+                        next(null, objs);
+                        //utils.respondJSON(res, utils.json.Ok({ posts: posts }));
+                    }
+                });
+            },
+            function (posts, next) {
+                async.eachSeries(posts,
+                    function (item, next) {
+                        var _global = {
+                            votedUp: false,
+                            votedDown: false,
+                            post: item
+                        };
+                        var post_id = item._id;
+                        async.waterfall([
+
+                            function (next) {
+                                if (!user_id) {
+                                    return next(null, null);
+                                }
+                                //check if the user as upvoted this post
+                                var query = PostsModel.findOne({_id: post_id, 'votes.ups': user_id});
+                                query.select('_id');
+                                query.exec(next);
+                            },
+                            function (up_post, next) {
+                                if (up_post) {
+                                    _global.votedUp = true;
+                                    next(null, null);
+                                } else {
+                                    if (!user_id) {
+                                        return next(null, null);
+                                    }
+                                    //check if the user has downvoted this post1
+                                    var query = PostsModel.findOne({_id: post_id, 'votes.downs': user_id});
+                                    query.select('_id');
+                                    query.exec(next);
+                                }
+                            },
+                            function (down_vote, next) {
+                                if (down_vote) {
+                                    _global.votedDown = true;
+                                }
+                                _global.post.votes.user_voted_up = _global.votedUp;
+                                _global.post.votes.user_voted_down = _global.votedDown;
+                                next(null);
+                            }
+                        ], next);
+                    },
+                    function (err) {
+                        next(err, posts);
+                    }
+                );
+            }
+        ], function (err, posts) {
             if (err) {
-                utils.respondJSON(res, utils.json.ServerError('err occurred in mongodb: '+err));
+                utils.respondJSON(res, err);
             } else {
-                utils.respondJSON(res, utils.json.Ok({ posts: posts }));
+                utils.respondJSON(res, utils.json.Ok({ posts: posts}));
             }
         });
+
 
     });
 
@@ -44,9 +109,11 @@ module.exports = function (router) {
             'votes.hotness', 'votes.score.down', 'votes.score.up', 'votes.score.total',
             'comments', 'created_at', 'updated_at'
         ];
-        var _post = null;
-        var _votedUp = false;
-        var _votedDown = false;
+        var _global = {
+            votedUp: false,
+            votedDown: false,
+            post: {}
+        };
         async.waterfall([
            function (next) {
                //GET the actual post
@@ -57,23 +124,47 @@ module.exports = function (router) {
                        } else if (!post) {
                            next(utils.json.NotFound(post_id, 'Post'));
                        } else {
-                           _post = post;
-                           next(null);
+                           next(null, post);
                        }
                    });
            },
-            function (next) {
+            function (post, next) {
+                _global.post = post.toObject();
                 if (!user_id) {
-                    return next(null);
+                    return next(null, null);
                 }
+                //check if the user as upvoted this post
+                var query = PostsModel.findOne({_id: post_id, 'votes.ups': user_id});
+                query.select('_id');
+                query.exec(next);
+            },
+            function (up_post, next) {
+                if (up_post) {
+                    _global.votedUp = true;
+                    next(null, null);
+                } else {
+                    if (!user_id) {
+                        return next(null, null);
+                    }
+                    //check if the user has downvoted this post1
+                    var query = PostsModel.findOne({_id: post_id, 'votes.downs': user_id});
+                    query.select('_id');
+                    query.exec(next);
+                }
+            },
+            function (down_vote, next) {
+                if (down_vote) {
+                    _global.votedDown = true;
+                }
+                _global.post.votes.user_voted_up = _global.votedUp;
+                _global.post.votes.user_voted_down = _global.votedDown;
                 next(null);
-                //check if the user has downvoted/upvoted it
             }
-        ], function (err, __) {
+        ], function (err) {
             if (err) {
                 utils.respondJSON(res, err);
             } else {
-                utils.respondJSON(res, utils.json.Ok({ post: _post }));
+                utils.respondJSON(res, utils.json.Ok({ post: _global.post }));
             }
         });
 

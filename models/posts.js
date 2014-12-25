@@ -65,7 +65,6 @@ PostSchema.methods.customCreate = function (cb) {
     this.save(cb);
 };
 
-
 //UserSchema.methods.toto = ...
 
 var PostModel = mongoose.model('Post', PostSchema);
