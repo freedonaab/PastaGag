@@ -12,7 +12,15 @@ var UsersModel = require('../../models/users');
 module.exports = function (router) {
 
     router.get('/', function (req, res) {
-        PostsModel.find(function (err, posts) {
+
+        var query = PostsModel.find();
+        var fields = [
+            '_id', 'title', 'content', 'content_type', 'author_id', 'status',
+            'votes.hotness', 'votes.score.down', 'votes.score.up', 'votes.score.total',
+            'created_at', 'updated_at'
+        ];
+        query.select(fields.join(' '));
+        query.exec(function (err, posts) {
             if (err) {
                 utils.respondJSON(res, utils.json.ServerError('err occurred in mongodb: '+err));
             } else {
@@ -29,7 +37,13 @@ module.exports = function (router) {
             return utils.respondJSON(res, utils.json.BadRequest('url param post_id is required'));
         }
 
-        PostsModel.findById(post_id, function (err, post) {
+        var fields = [
+            '_id', 'title', 'content', 'content_type', 'author_id', 'status',
+            'votes.hotness', 'votes.score.down', 'votes.score.up', 'votes.score.total',
+            'comments', 'created_at', 'updated_at'
+        ];
+        PostsModel.findById(post_id, fields.join(' '),
+            function (err, post) {
             if (err) {
                 utils.respondJSON(res, utils.json.ServerError('err occurred in mongodb: '+err));
             } else if (!post) {
