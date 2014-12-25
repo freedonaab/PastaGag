@@ -233,7 +233,7 @@ describe('/posts', function () {
                 }])(next);
             },
             function (postIds, next) {
-                testUtils.get(config, '/posts')(next);
+                testUtils.get(config, '/posts/')(next);
             }
         ], function (err, res) {
             should.not.exist(err);

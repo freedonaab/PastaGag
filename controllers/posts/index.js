@@ -31,7 +31,9 @@ module.exports = function (router) {
     });
 
     router.get('/:post_id', function (req, res) {
+
         var post_id = req.params.post_id;
+        var user_id = req.query.user_id || null;
 
         if (!post_id) {
             return utils.respondJSON(res, utils.json.BadRequest('url param post_id is required'));
@@ -42,14 +44,36 @@ module.exports = function (router) {
             'votes.hotness', 'votes.score.down', 'votes.score.up', 'votes.score.total',
             'comments', 'created_at', 'updated_at'
         ];
-        PostsModel.findById(post_id, fields.join(' '),
-            function (err, post) {
+        var _post = null;
+        var _votedUp = false;
+        var _votedDown = false;
+        async.waterfall([
+           function (next) {
+               //GET the actual post
+               PostsModel.findById(post_id, fields.join(' '),
+                   function (err, post) {
+                       if (err) {
+                           next(utils.json.ServerError('err occurred in mongodb: '+err));
+                       } else if (!post) {
+                           next(utils.json.NotFound(post_id, 'Post'));
+                       } else {
+                           _post = post;
+                           next(null);
+                       }
+                   });
+           },
+            function (next) {
+                if (!user_id) {
+                    return next(null);
+                }
+                next(null);
+                //check if the user has downvoted/upvoted it
+            }
+        ], function (err, __) {
             if (err) {
-                utils.respondJSON(res, utils.json.ServerError('err occurred in mongodb: '+err));
-            } else if (!post) {
-                utils.respondJSON(res, utils.json.NotFound(post_id, 'Post'));
+                utils.respondJSON(res, err);
             } else {
-                utils.respondJSON(res, utils.json.Ok({ post: post }));
+                utils.respondJSON(res, utils.json.Ok({ post: _post }));
             }
         });
 

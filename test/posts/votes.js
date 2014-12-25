@@ -31,7 +31,7 @@ describe('/posts', function () {
 
     it('should list all posts', function (done) {
         request(config.mock)
-            .get('/posts')
+            .get('/posts/')
             .expect(200)
             .end(function (err, res) {
                 done(err);
@@ -400,6 +400,258 @@ describe('/posts', function () {
             post.votes.score.should.have.property('up', 2);
             post.votes.score.should.have.property('down', 0);
             post.votes.score.should.have.property('total', 2);
+            done();
+        });
+    });
+
+
+    it('On GET /posts/:post_id, an user should be able to see that he hasnt upvoted or downvoted a post', function (done) {
+        var creatorId = null;
+        var gerardId = null;
+        async.waterfall([
+            testUtils.createUsers(config, [{
+                email: "mouloud1@hotmail.fr",
+                username: "kebab94",
+                password: "wallah123"
+            },{
+                email: "gerard@hotmail.fr",
+                username: "gerardleretour",
+                password: "gerardinator"
+            }]),
+            function (userIds, next) {
+                creatorId = userIds[0];
+                gerardId = userIds[1];
+                testUtils.createPostWithErrorChecking(config, {
+                    title: "Watch this adorable little puppy die in fire",
+                    content: "http://127.0.0.1:8080/fake/images/success/123456.jpg",
+                    author_id: creatorId
+                })(next);
+            },
+            function (post, next) {
+                var postId = post._id;
+                testUtils.getPostWithErrorChecking(config, postId, gerardId)(next);
+            }
+        ], function (err, post) {
+            should.not.exist(err);
+            should.exist(post);
+            post.should.have.property("title", "Watch this adorable little puppy die in fire");
+            post.should.have.property("content", "http://127.0.0.1:8080/fake/images/success/123456.jpg");
+            post.should.have.property("content_type", "image");
+            post.should.have.property('votes');
+            post.votes.should.have.property('hotness');
+            post.votes.hotness.should.be.greaterThan(0);
+            post.votes.should.have.property('score');
+            post.votes.should.have.property('user_voted_up', false);
+            post.votes.should.have.property('user_voted_down', false);
+            done();
+        });
+    });
+
+    it('On GET /posts/:post_id, an user should be able to see that he has upvoted a post', function (done) {
+        var userId = null;
+        async.waterfall([
+            testUtils.createUser(config, {
+                email: "mouloud1@hotmail.fr",
+                username: "kebab94",
+                password: "wallah123"
+            }),
+            function (res, next) {
+                userId = res.body.data.user._id;
+                testUtils.createPostWithErrorChecking(config, {
+                    title: "Watch this adorable little puppy die in fire",
+                    content: "http://127.0.0.1:8080/fake/images/success/123456.jpg",
+                    author_id: userId
+                })(next);
+            },
+            function (post, next) {
+                var postId = post._id;
+                testUtils.getPostWithErrorChecking(config, postId, userId)(next);
+            }
+        ], function (err, post) {
+            should.not.exist(err);
+            should.exist(post);
+            post.should.have.property("title", "Watch this adorable little puppy die in fire");
+            post.should.have.property("content", "http://127.0.0.1:8080/fake/images/success/123456.jpg");
+            post.should.have.property("content_type", "image");
+            post.should.have.property('votes');
+            post.votes.should.have.property('hotness');
+            post.votes.hotness.should.be.greaterThan(0);
+            post.votes.should.have.property('score');
+            post.votes.should.have.property('user_voted_up', true);
+            post.votes.should.have.property('user_voted_down', false);
+            post.votes.score.should.have.property('up', 1);
+            post.votes.score.should.have.property('down', 0);
+            post.votes.score.should.have.property('total', 1);
+            done();
+        });
+    });
+
+    it('On GET /posts/:post_id, an user should be able to see that he has downvoted a post', function (done) {
+        var userId = null;
+        var postId = null;
+        async.waterfall([
+            testUtils.createUser(config, {
+                email: "mouloud1@hotmail.fr",
+                username: "kebab94",
+                password: "wallah123"
+            }),
+            function (res, next) {
+                userId = res.body.data.user._id;
+                testUtils.createPostWithErrorChecking(config, {
+                    title: "Watch this adorable little puppy die in fire",
+                    content: "http://127.0.0.1:8080/fake/images/success/123456.jpg",
+                    author_id: userId
+                })(next);
+            },
+            function (post, next) {
+                postId = post._id;
+                testUtils.post(config, '/posts/'+postId+'/votes/down', { user_id: userId })(next);
+            },
+            function (_, next) {
+                testUtils.getPostWithErrorChecking(config, postId)(next);
+            }
+        ], function (err, post) {
+            should.not.exist(err);
+            should.exist(post);
+            post.should.have.property("title", "Watch this adorable little puppy die in fire");
+            post.should.have.property("content", "http://127.0.0.1:8080/fake/images/success/123456.jpg");
+            post.should.have.property("content_type", "image");
+            post.should.have.property('votes');
+            post.votes.should.have.property('hotness');
+            post.votes.hotness.should.be.greaterThan(0);
+            post.votes.should.have.property('score');
+            post.votes.should.have.property('user_voted_up', false);
+            post.votes.should.have.property('user_voted_down', true);
+            post.votes.score.should.have.property('up', 0);
+            post.votes.score.should.have.property('down', 1);
+            post.votes.score.should.have.property('total', -1);
+            done();
+        });
+    });
+
+    it('On GET /posts, an user should be able to see that he hasnt upvoted or downvoted a post', function (done) {
+        var creatorId = null;
+        var gerardId = null;
+        async.waterfall([
+            testUtils.createUsers(config, [{
+                email: "mouloud1@hotmail.fr",
+                username: "kebab94",
+                password: "wallah123"
+            },{
+                email: "gerard@hotmail.fr",
+                username: "gerard22",
+                password: "password"
+            }]),
+            function (userIds, next) {
+                creatorId = userIds[0];
+                gerardId = userIds[1];
+                testUtils.createPostWithErrorChecking(config, {
+                    title: "Watch this adorable little puppy die in fire",
+                    content: "http://127.0.0.1:8080/fake/images/success/123456.jpg",
+                    author_id: creatorId
+                })(next);
+            },
+            function (post, next) {
+                var postId = post._id;
+                testUtils.get(config, '/posts/', gerardId)(next);
+            }
+        ], function (err, res) {
+            should.not.exist(err);
+            should.exist(res);
+            res.should.have.property('body');
+            res.body.should.have.property('metadata');
+            res.body.should.have.property('data');
+            res.body.metadata.should.have.property('success', true);
+            res.body.metadata.should.have.property('error', null);
+            res.body.metadata.should.have.property('statusCode', 200);
+            res.body.data.should.have.property('posts');
+            res.body.data.posts.should.be.an.Array;
+            res.body.data.posts.should.have.length(1);
+            res.body.data.posts[0].votes.should.have.property('user_voted_up', false);
+            res.body.data.posts[0].votes.should.have.property('user_voted_down', false);
+            done();
+        });
+    });
+
+
+    it('On GET /posts, an user should be able to see that he has upvoted a post', function (done) {
+        var userId = null;
+        async.waterfall([
+            testUtils.createUser(config, {
+                email: "mouloud1@hotmail.fr",
+                username: "kebab94",
+                password: "wallah123"
+            }),
+            function (res, next) {
+                userId = res.body.data.user._id;
+                testUtils.createPostWithErrorChecking(config, {
+                    title: "Watch this adorable little puppy die in fire",
+                    content: "http://127.0.0.1:8080/fake/images/success/123456.jpg",
+                    author_id: userId
+                })(next);
+            },
+            function (post, next) {
+                var postId = post._id;
+                testUtils.get(config, '/posts/', userId)(next);
+            }
+        ], function (err, res) {
+            should.not.exist(err);
+            should.exist(res);
+            res.should.have.property('body');
+            res.body.should.have.property('metadata');
+            res.body.should.have.property('data');
+            res.body.metadata.should.have.property('success', true);
+            res.body.metadata.should.have.property('error', null);
+            res.body.metadata.should.have.property('statusCode', 200);
+            res.body.data.should.have.property('posts');
+            res.body.data.posts.should.be.an.Array;
+            res.body.data.posts.should.have.length(1);
+            res.body.data.posts[0].votes.should.have.property('hotness');
+            res.body.data.posts[0].votes.should.have.property('score');
+            res.body.data.posts[0].votes.should.have.property('user_voted_up', true);
+            res.body.data.posts[0].votes.should.have.property('user_voted_down', false);
+            done();
+        });
+    });
+
+    it('On GET /posts, an user should be able to see that he has downvoted a post', function (done) {
+        var userId = null;
+        var postId = null;
+        async.waterfall([
+            testUtils.createUser(config, {
+                email: "mouloud1@hotmail.fr",
+                username: "kebab94",
+                password: "wallah123"
+            }),
+            function (res, next) {
+                userId = res.body.data.user._id;
+                testUtils.createPostWithErrorChecking(config, {
+                    title: "Watch this adorable little puppy die in fire",
+                    content: "http://127.0.0.1:8080/fake/images/success/123456.jpg",
+                    author_id: userId
+                })(next);
+            },
+            function (post, next) {
+                postId = post._id;
+                testUtils.post(config, '/posts/'+postId+'/votes/down', { user_id: userId })(next);
+            },
+            function (_, next) {
+                testUtils.get(config, '/posts/', userId)(next);
+            }
+        ], function (err, res) {
+            should.not.exist(err);
+            should.exist(res);
+            res.should.have.property('body');
+            res.body.should.have.property('metadata');
+            res.body.should.have.property('data');
+            res.body.metadata.should.have.property('success', true);
+            res.body.metadata.should.have.property('error', null);
+            res.body.metadata.should.have.property('statusCode', 200);
+            res.body.data.should.have.property('posts');
+            res.body.data.posts.should.be.an.Array;
+            res.body.data.posts.should.have.length(1);
+            res.body.data.posts[0].votes.should.have.property('user_voted_up', false);
+            res.body.data.posts[0].votes.should.have.property('user_voted_down', true);
             done();
         });
     });
