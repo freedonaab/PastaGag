@@ -71,7 +71,7 @@ describe('/posts', function () {
     });
 
 
-    it('An user reate a post then downvote it, should have a score of 0', function (done) {
+    it('An user create a post then downvote it, should have a score of 0', function (done) {
         var userId = null;
         var postId = null;
         async.waterfall([
@@ -270,6 +270,136 @@ describe('/posts', function () {
             post.votes.score.should.have.property('up', 1);
             post.votes.score.should.have.property('down', 1);
             post.votes.score.should.have.property('total', 0);
+            done();
+        });
+    });
+
+    it('An user shoulnt be able to downvote a post twice', function (done) {
+        var user1Id = null;
+        var user2Id = null;
+        var postId = null;
+        async.waterfall([
+            testUtils.createUsers(config, [{
+                email: "postcreator@hotmail.fr",
+                username: "postcreator",
+                password: "wallah123"
+            },{
+                email: "postvoter@hotmail.fr",
+                username: "postvoter",
+                password: "tamerdejonathan"
+            }]),
+            function (userIds, next) {
+                user1Id = userIds[0];
+                user2Id = userIds[1];
+                testUtils.createPostWithErrorChecking(config, {
+                    title: "Watch this adorable little puppy die in fire",
+                    content: "http://127.0.0.1:8080/fake/images/success/123456.jpg",
+                    author_id: user1Id
+                })(next);
+            },
+            function (post, next) {
+                postId = post._id;
+                testUtils.post(config, '/posts/'+postId+'/votes/down', { user_id: user2Id })(next);
+            },
+            function (res, next) {
+                res.should.have.property('body');
+                res.body.should.have.property('metadata');
+                res.body.should.have.property('data');
+                res.body.metadata.should.have.property('success', true);
+                res.body.metadata.should.have.property('error', null);
+                res.body.metadata.should.have.property('statusCode', 200);
+                next(null);
+            },
+            function (next) {
+                testUtils.post(config, '/posts/'+postId+'/votes/down', { user_id: user2Id })(next);
+            },
+            function (res, next) {
+                res.should.have.property('body');
+                res.body.should.have.property('metadata');
+                res.body.should.have.property('data');
+                res.body.metadata.should.have.property('success', false);
+                res.body.metadata.should.have.property('error');
+                res.body.metadata.should.have.property('statusCode', 400);
+                testUtils.getPostWithErrorChecking(config, postId)(next);
+            }
+        ], function (err, post) {
+            should.not.exist(err);
+            should.exist(post);
+            post.should.have.property("title", "Watch this adorable little puppy die in fire");
+            post.should.have.property("content", "http://127.0.0.1:8080/fake/images/success/123456.jpg");
+            post.should.have.property("content_type", "image");
+            post.should.have.property('votes');
+            post.votes.should.have.property('hotness');
+            post.votes.hotness.should.be.greaterThan(0);
+            post.votes.should.have.property('score');
+            post.votes.score.should.have.property('up', 1);
+            post.votes.score.should.have.property('down', 1);
+            post.votes.score.should.have.property('total', 0);
+            done();
+        });
+    });
+
+    it('An user shoulnt be able to upvote a post twice', function (done) {
+        var user1Id = null;
+        var user2Id = null;
+        var postId = null;
+        async.waterfall([
+            testUtils.createUsers(config, [{
+                email: "postcreator@hotmail.fr",
+                username: "postcreator",
+                password: "wallah123"
+            },{
+                email: "postvoter@hotmail.fr",
+                username: "postvoter",
+                password: "tamerdejonathan"
+            }]),
+            function (userIds, next) {
+                user1Id = userIds[0];
+                user2Id = userIds[1];
+                testUtils.createPostWithErrorChecking(config, {
+                    title: "Watch this adorable little puppy die in fire",
+                    content: "http://127.0.0.1:8080/fake/images/success/123456.jpg",
+                    author_id: user1Id
+                })(next);
+            },
+            function (post, next) {
+                postId = post._id;
+                testUtils.post(config, '/posts/'+postId+'/votes/up', { user_id: user2Id })(next);
+            },
+            function (res, next) {
+                res.should.have.property('body');
+                res.body.should.have.property('metadata');
+                res.body.should.have.property('data');
+                res.body.metadata.should.have.property('success', true);
+                res.body.metadata.should.have.property('error', null);
+                res.body.metadata.should.have.property('statusCode', 200);
+                next(null);
+            },
+            function (next) {
+                testUtils.post(config, '/posts/'+postId+'/votes/up', { user_id: user2Id })(next);
+            },
+            function (res, next) {
+                res.should.have.property('body');
+                res.body.should.have.property('metadata');
+                res.body.should.have.property('data');
+                res.body.metadata.should.have.property('success', false);
+                res.body.metadata.should.have.property('error');
+                res.body.metadata.should.have.property('statusCode', 400);
+                testUtils.getPostWithErrorChecking(config, postId)(next);
+            }
+        ], function (err, post) {
+            should.not.exist(err);
+            should.exist(post);
+            post.should.have.property("title", "Watch this adorable little puppy die in fire");
+            post.should.have.property("content", "http://127.0.0.1:8080/fake/images/success/123456.jpg");
+            post.should.have.property("content_type", "image");
+            post.should.have.property('votes');
+            post.votes.should.have.property('hotness');
+            post.votes.hotness.should.be.greaterThan(0);
+            post.votes.should.have.property('score');
+            post.votes.score.should.have.property('up', 2);
+            post.votes.score.should.have.property('down', 0);
+            post.votes.score.should.have.property('total', 2);
             done();
         });
     });
