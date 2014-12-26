@@ -291,17 +291,15 @@ describe('/posts', function () {
         async.waterfall([
             testUtils.createUsers(config, users),
             function (res, next) {
-                console.log(res);
                 userIds = res;
                 _.each(postDataSet, function (p) {p.author_id = userIds[0]; });
                 testUtils.createPosts(config, posts)(next);
             },
             function (res, next) {
-                console.log(res);
                 var i = 0;
                 _.forEach(posts, function (item) {
                     item._id = res[i];
-                    console.log(item._id, item.title, res[i]);
+                    //console.log(item._id, item.title, res[i]);
                     ++i;
                 });
                 //console.log(posts);
@@ -426,17 +424,15 @@ describe('/posts', function () {
         async.waterfall([
             testUtils.createUsers(config, users),
             function (res, next) {
-                console.log(res);
                 userIds = res;
                 _.each(postDataSet, function (p) {p.author_id = userIds[0]; });
                 testUtils.createPosts(config, posts)(next);
             },
             function (res, next) {
-                console.log(res);
                 var i = 0;
                 _.forEach(posts, function (item) {
                     item._id = res[i];
-                    console.log(item._id, item.title, res[i]);
+                    //console.log(item._id, item.title, res[i]);
                     ++i;
                 });
                 //console.log(posts);
@@ -561,17 +557,14 @@ describe('/posts', function () {
         async.waterfall([
             testUtils.createUsers(config, users),
             function (res, next) {
-                console.log(res);
                 userIds = res;
                 _.each(postDataSet, function (p) {p.author_id = userIds[0]; });
                 testUtils.createPosts(config, posts)(next);
             },
             function (res, next) {
-                console.log(res);
                 var i = 0;
                 _.forEach(posts, function (item) {
                     item._id = res[i];
-                    console.log(item._id, item.title, res[i]);
                     ++i;
                 });
                 //console.log(posts);
@@ -672,17 +665,16 @@ describe('/posts', function () {
             res.body.metadata.should.have.property('statusCode', 200);
             res.body.data.should.have.property('posts');
             res.body.data.posts.should.be.an.Array;
-            //res.body.data.posts.should.have.length(20);
-            res.body.data.posts.should.have.length(30);
-            res.body.data.posts[1].should.have.property('title', '15');
-            res.body.data.posts[2].should.have.property('title', '9');
-            res.body.data.posts[3].should.have.property('title', '10');
-            res.body.data.posts[24].should.have.property('title', '16');
-            res.body.data.posts[25].should.have.property('title', '2');
-            res.body.data.posts[26].should.have.property('title', '21');
-            res.body.data.posts[27].should.have.property('title', '26');
-            res.body.data.posts[28].should.have.property('title', '11');
-            res.body.data.posts[29].should.have.property('title', '29');
+            //15 9 10 1 3 4 5 6 7 8 12 13 14 17 18 19 20 22 23 24 25 16 2 21 11
+            res.body.data.posts.should.have.length(25);
+            res.body.data.posts[0].should.have.property('title', '15');
+            res.body.data.posts[1].should.have.property('title', '9');
+            res.body.data.posts[2].should.have.property('title', '10');
+            //res.body.data.posts[25].should.have.property('title', '2');
+            //res.body.data.posts[26].should.have.property('title', '21');
+            //res.body.data.posts[27].should.have.property('title', '26');
+            //res.body.data.posts[28].should.have.property('title', '11');
+            //res.body.data.posts[29].should.have.property('title', '29');
             done();
         });
     });
@@ -694,17 +686,14 @@ describe('/posts', function () {
         async.waterfall([
             testUtils.createUsers(config, users),
             function (res, next) {
-                console.log(res);
                 userIds = res;
                 _.each(postDataSet, function (p) {p.author_id = userIds[0]; });
                 testUtils.createPosts(config, posts)(next);
             },
             function (res, next) {
-                console.log(res);
                 var i = 0;
                 _.forEach(posts, function (item) {
                     item._id = res[i];
-                    console.log(item._id, item.title, res[i]);
                     ++i;
                 });
                 //console.log(posts);
@@ -720,13 +709,13 @@ describe('/posts', function () {
                 testUtils.post(config, '/posts/'+posts[29]._id+'/votes/up', { user_id: userIds[4] })(next);
             },
             function (res, next) {
-                testUtils.post(config, '/posts/'+posts[14]._id+'/votes/up', { user_id: userIds[1] })(next);
+                testUtils.post(config, '/posts/'+posts[17]._id+'/votes/up', { user_id: userIds[1] })(next);
             },
             function (res, next) {
-                testUtils.post(config, '/posts/'+posts[14]._id+'/votes/up', { user_id: userIds[2] })(next);
+                testUtils.post(config, '/posts/'+posts[17]._id+'/votes/up', { user_id: userIds[2] })(next);
             },
             function (res, next) {
-                testUtils.post(config, '/posts/'+posts[14]._id+'/votes/up', { user_id: userIds[3] })(next);
+                testUtils.post(config, '/posts/'+posts[17]._id+'/votes/up', { user_id: userIds[3] })(next);
             },
             function (res, next) {
                 testUtils.post(config, '/posts/'+posts[8]._id+'/votes/up', { user_id: userIds[1] })(next);
@@ -797,6 +786,10 @@ describe('/posts', function () {
         ], function (err, res) {
             should.not.exist(err);
             should.exist(res);
+            //_.each(res.body.data.posts, function (p) {
+            //    console.log(p.title, p.votes.score.total, p.created_at);
+            //});
+            //9 10 1 3 4 5 6 7 8 12 13 14 16 2 21 11
             res.should.have.property('body');
             res.body.should.have.property('metadata');
             res.body.should.have.property('data');
@@ -805,17 +798,12 @@ describe('/posts', function () {
             res.body.metadata.should.have.property('statusCode', 200);
             res.body.data.should.have.property('posts');
             res.body.data.posts.should.be.an.Array;
-            //res.body.data.posts.should.have.length(20);
-            res.body.data.posts.should.have.length(30);
-            res.body.data.posts[1].should.have.property('title', '15');
-            res.body.data.posts[2].should.have.property('title', '9');
-            res.body.data.posts[3].should.have.property('title', '10');
-            res.body.data.posts[24].should.have.property('title', '16');
-            res.body.data.posts[25].should.have.property('title', '2');
-            res.body.data.posts[26].should.have.property('title', '21');
-            res.body.data.posts[27].should.have.property('title', '26');
-            res.body.data.posts[28].should.have.property('title', '11');
-            res.body.data.posts[29].should.have.property('title', '29');
+            res.body.data.posts.should.have.length(16);
+            res.body.data.posts[0].should.have.property('title', '9');
+            res.body.data.posts[1].should.have.property('title', '10');
+            res.body.data.posts[13].should.have.property('title', '16');
+            res.body.data.posts[14].should.have.property('title', '2');
+            res.body.data.posts[15].should.have.property('title', '11');
             done();
         });
     });
@@ -827,30 +815,27 @@ describe('/posts', function () {
         async.waterfall([
             testUtils.createUsers(config, users),
             function (res, next) {
-                console.log(res);
                 userIds = res;
                 _.each(postDataSet, function (p) {p.author_id = userIds[0]; });
                 testUtils.createPosts(config, posts)(next);
             },
             function (res, next) {
-                console.log(res);
                 var i = 0;
                 _.forEach(posts, function (item) {
                     item._id = res[i];
-                    console.log(item._id, item.title, res[i]);
                     ++i;
                 });
                 //console.log(posts);
-                testUtils.post(config, '/posts/'+posts[29]._id+'/votes/up', { user_id: userIds[1] })(next);
+                testUtils.post(config, '/posts/'+posts[11]._id+'/votes/up', { user_id: userIds[1] })(next);
             },
             function (res, next) {
-                testUtils.post(config, '/posts/'+posts[29]._id+'/votes/up', { user_id: userIds[2] })(next);
+                testUtils.post(config, '/posts/'+posts[11]._id+'/votes/up', { user_id: userIds[2] })(next);
             },
             function (res, next) {
-                testUtils.post(config, '/posts/'+posts[29]._id+'/votes/up', { user_id: userIds[3] })(next);
+                testUtils.post(config, '/posts/'+posts[11]._id+'/votes/up', { user_id: userIds[3] })(next);
             },
             function (res, next) {
-                testUtils.post(config, '/posts/'+posts[29]._id+'/votes/up', { user_id: userIds[4] })(next);
+                testUtils.post(config, '/posts/'+posts[11]._id+'/votes/up', { user_id: userIds[4] })(next);
             },
             function (res, next) {
                 testUtils.post(config, '/posts/'+posts[14]._id+'/votes/up', { user_id: userIds[1] })(next);
@@ -930,6 +915,10 @@ describe('/posts', function () {
         ], function (err, res) {
             should.not.exist(err);
             should.exist(res);
+            //_.each(res.body.data.posts, function (p) {
+            //    console.log(p.title, p.votes.score.total, p.created_at);
+            //});
+            //9 10 1 3 4 5 6 7 8 16 2
             res.should.have.property('body');
             res.body.should.have.property('metadata');
             res.body.should.have.property('data');
@@ -938,17 +927,10 @@ describe('/posts', function () {
             res.body.metadata.should.have.property('statusCode', 200);
             res.body.data.should.have.property('posts');
             res.body.data.posts.should.be.an.Array;
-            //res.body.data.posts.should.have.length(20);
-            res.body.data.posts.should.have.length(30);
-            res.body.data.posts[1].should.have.property('title', '15');
-            res.body.data.posts[2].should.have.property('title', '9');
-            res.body.data.posts[3].should.have.property('title', '10');
-            res.body.data.posts[24].should.have.property('title', '16');
-            res.body.data.posts[25].should.have.property('title', '2');
-            res.body.data.posts[26].should.have.property('title', '21');
-            res.body.data.posts[27].should.have.property('title', '26');
-            res.body.data.posts[28].should.have.property('title', '11');
-            res.body.data.posts[29].should.have.property('title', '29');
+            res.body.data.posts.should.have.length(10);
+            res.body.data.posts[0].should.have.property('title', '9');
+            res.body.data.posts[1].should.have.property('title', '10');
+            res.body.data.posts[9].should.have.property('title', '2');
             done();
         });
     });

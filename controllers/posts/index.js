@@ -1,5 +1,6 @@
 'use strict';
 
+var moment = require('moment');
 var async = require('async');
 var _ = require('underscore');
 var utils = require('../../lib/utils');
@@ -14,17 +15,28 @@ module.exports = function (router) {
 
 
 
-    var index = function (req, res, options) {
-
-        var query = null;
-        query = PostsModel.find();
-
-        console.log(options);
+    var _generateQueryObjectFromOptions = function (query, options) {
         if (options.type === 'new') {
             query.sort({ created_at: 'desc'});
         } else if (options.type === 'best') {
             query.sort({ 'votes.score.total': 'desc'});
         }
+
+        if (options.args === 'day') {
+            query.where('created_at').gte(moment().subtract(1, 'days'));
+        } else if (options.args === 'week') {
+            query.where('created_at').gte(moment().subtract(7, 'days'));
+        } else if (options.args === 'month') {
+            query.where('created_at').gte(moment().subtract(1, 'months'));
+        }
+    };
+
+    var index = function (req, res, options) {
+
+        var query = null;
+        query = PostsModel.find();
+
+        _generateQueryObjectFromOptions(query, options);
 
         var user_id = req.query.user_id || null;
 
