@@ -192,8 +192,6 @@ describe('/posts', function () {
         }
     ];
 
-    postDataSet = _.shuffle(postDataSet);
-
 
     var users = [
         {
@@ -244,7 +242,7 @@ describe('/posts', function () {
             function (res, next) {
                 var userId = res.body.data.user._id;
                 _.each(postDataSet, function (p) {p.author_id = userId; });
-                testUtils.createPosts(config, postDataSet)(next);
+                testUtils.createPosts(config, _.shuffle(postDataSet))(next);
             },
             function (postIds, next) {
                 testUtils.get(config, '/posts/new')(next);
@@ -289,102 +287,109 @@ describe('/posts', function () {
     it('GET /posts/best should sort by vote number', function (done) {
         var userIds = [];
         var postIds = [];
+        var posts = postDataSet;
         async.waterfall([
             testUtils.createUsers(config, users),
             function (res, next) {
                 console.log(res);
                 userIds = res;
                 _.each(postDataSet, function (p) {p.author_id = userIds[0]; });
-                testUtils.createPosts(config, postDataSet)(next);
+                testUtils.createPosts(config, posts)(next);
             },
             function (res, next) {
                 console.log(res);
-                postIds = res;
-                testUtils.post(config, '/posts/'+postIds[7]+'/votes/up', { user_id: userIds[1] })(next);
+                var i = 0;
+                _.forEach(posts, function (item) {
+                    item._id = res[i];
+                    console.log(item._id, item.title, res[i]);
+                    ++i;
+                });
+                //console.log(posts);
+                testUtils.post(config, '/posts/'+posts[7]._id+'/votes/up', { user_id: userIds[1] })(next);
             },
             function (res, next) {
-                testUtils.post(config, '/posts/'+postIds[7]+'/votes/up', { user_id: userIds[2] })(next);
+                testUtils.post(config, '/posts/'+posts[7]._id+'/votes/up', { user_id: userIds[2] })(next);
             },
             function (res, next) {
-                testUtils.post(config, '/posts/'+postIds[7]+'/votes/up', { user_id: userIds[3] })(next);
+                testUtils.post(config, '/posts/'+posts[7]._id+'/votes/up', { user_id: userIds[3] })(next);
             },
             function (res, next) {
-                testUtils.post(config, '/posts/'+postIds[7]+'/votes/up', { user_id: userIds[4] })(next);
+                testUtils.post(config, '/posts/'+posts[7]._id+'/votes/up', { user_id: userIds[4] })(next);
             },
             function (res, next) {
-                testUtils.post(config, '/posts/'+postIds[14]+'/votes/up', { user_id: userIds[1] })(next);
+                testUtils.post(config, '/posts/'+posts[14]._id+'/votes/up', { user_id: userIds[1] })(next);
             },
             function (res, next) {
-                testUtils.post(config, '/posts/'+postIds[14]+'/votes/up', { user_id: userIds[2] })(next);
+                testUtils.post(config, '/posts/'+posts[14]._id+'/votes/up', { user_id: userIds[2] })(next);
             },
             function (res, next) {
-                testUtils.post(config, '/posts/'+postIds[14]+'/votes/up', { user_id: userIds[3] })(next);
+                testUtils.post(config, '/posts/'+posts[14]._id+'/votes/up', { user_id: userIds[3] })(next);
             },
             function (res, next) {
-                testUtils.post(config, '/posts/'+postIds[8]+'/votes/up', { user_id: userIds[1] })(next);
+                testUtils.post(config, '/posts/'+posts[8]._id+'/votes/up', { user_id: userIds[1] })(next);
             },
             function (res, next) {
-                testUtils.post(config, '/posts/'+postIds[8]+'/votes/up', { user_id: userIds[2] })(next);
+                testUtils.post(config, '/posts/'+posts[8]._id+'/votes/up', { user_id: userIds[2] })(next);
             },
             function (res, next) {
-                testUtils.post(config, '/posts/'+postIds[9]+'/votes/up', { user_id: userIds[1] })(next);
+                testUtils.post(config, '/posts/'+posts[9]._id+'/votes/up', { user_id: userIds[1] })(next);
             },
             function (res, next) {
-                testUtils.post(config, '/posts/'+postIds[15]+'/votes/down', { user_id: userIds[0] })(next);
+                testUtils.post(config, '/posts/'+posts[15]._id+'/votes/down', { user_id: userIds[0] })(next);
             },
             function (res, next) {
-                testUtils.post(config, '/posts/'+postIds[1]+'/votes/down', { user_id: userIds[0] })(next);
+                testUtils.post(config, '/posts/'+posts[1]._id+'/votes/down', { user_id: userIds[0] })(next);
             },
             function (res, next) {
-                testUtils.post(config, '/posts/'+postIds[1]+'/votes/down', { user_id: userIds[1] })(next);
+                testUtils.post(config, '/posts/'+posts[1]._id+'/votes/down', { user_id: userIds[1] })(next);
             },
             function (res, next) {
-                testUtils.post(config, '/posts/'+postIds[20]+'/votes/down', { user_id: userIds[0] })(next);
+                testUtils.post(config, '/posts/'+posts[20]._id+'/votes/down', { user_id: userIds[0] })(next);
             },
             function (res, next) {
-                testUtils.post(config, '/posts/'+postIds[20]+'/votes/down', { user_id: userIds[1] })(next);
+                testUtils.post(config, '/posts/'+posts[20]._id+'/votes/down', { user_id: userIds[1] })(next);
             },
             function (res, next) {
-                testUtils.post(config, '/posts/'+postIds[20]+'/votes/down', { user_id: userIds[2] })(next);
+                testUtils.post(config, '/posts/'+posts[20]._id+'/votes/down', { user_id: userIds[2] })(next);
             },
             function (res, next) {
-                testUtils.post(config, '/posts/'+postIds[25]+'/votes/down', { user_id: userIds[0] })(next);
+                testUtils.post(config, '/posts/'+posts[25]._id+'/votes/down', { user_id: userIds[0] })(next);
             },
             function (res, next) {
-                testUtils.post(config, '/posts/'+postIds[25]+'/votes/down', { user_id: userIds[1] })(next);
+                testUtils.post(config, '/posts/'+posts[25]._id+'/votes/down', { user_id: userIds[1] })(next);
             },
             function (res, next) {
-                testUtils.post(config, '/posts/'+postIds[25]+'/votes/down', { user_id: userIds[2] })(next);
+                testUtils.post(config, '/posts/'+posts[25]._id+'/votes/down', { user_id: userIds[2] })(next);
             },
             function (res, next) {
-                testUtils.post(config, '/posts/'+postIds[10]+'/votes/down', { user_id: userIds[0] })(next);
+                testUtils.post(config, '/posts/'+posts[10]._id+'/votes/down', { user_id: userIds[0] })(next);
             },
             function (res, next) {
-                testUtils.post(config, '/posts/'+postIds[10]+'/votes/down', { user_id: userIds[1] })(next);
+                testUtils.post(config, '/posts/'+posts[10]._id+'/votes/down', { user_id: userIds[1] })(next);
             },
             function (res, next) {
-                testUtils.post(config, '/posts/'+postIds[10]+'/votes/down', { user_id: userIds[2] })(next);
+                testUtils.post(config, '/posts/'+posts[10]._id+'/votes/down', { user_id: userIds[2] })(next);
             },
             function (res, next) {
-                testUtils.post(config, '/posts/'+postIds[10]+'/votes/down', { user_id: userIds[3] })(next);
+                testUtils.post(config, '/posts/'+posts[10]._id+'/votes/down', { user_id: userIds[3] })(next);
             },
             function (res, next) {
-                testUtils.post(config, '/posts/'+postIds[28]+'/votes/down', { user_id: userIds[0] })(next);
+                testUtils.post(config, '/posts/'+posts[28]._id+'/votes/down', { user_id: userIds[0] })(next);
             },
             function (res, next) {
-                testUtils.post(config, '/posts/'+postIds[28]+'/votes/down', { user_id: userIds[1] })(next);
+                testUtils.post(config, '/posts/'+posts[28]._id+'/votes/down', { user_id: userIds[1] })(next);
             },
             function (res, next) {
-                testUtils.post(config, '/posts/'+postIds[28]+'/votes/down', { user_id: userIds[2] })(next);
+                testUtils.post(config, '/posts/'+posts[28]._id+'/votes/down', { user_id: userIds[2] })(next);
             },
             function (res, next) {
-                testUtils.post(config, '/posts/'+postIds[28]+'/votes/down', { user_id: userIds[3] })(next);
+                testUtils.post(config, '/posts/'+posts[28]._id+'/votes/down', { user_id: userIds[3] })(next);
             },
             function (res, next) {
-                testUtils.post(config, '/posts/'+postIds[28]+'/votes/down', { user_id: userIds[4] })(next);
+                testUtils.post(config, '/posts/'+posts[28]._id+'/votes/down', { user_id: userIds[4] })(next);
             },
             function (_, next) {
-                testUtils.get(config, '/posts/new')(next);
+                testUtils.get(config, '/posts/best')(next);
             }
         ], function (err, res) {
             should.not.exist(err);
@@ -399,16 +404,16 @@ describe('/posts', function () {
             res.body.data.posts.should.be.an.Array;
             //res.body.data.posts.should.have.length(20);
             res.body.data.posts.should.have.length(30);
-            res.body.data.posts[0].should.have.property('title', '7');
-            res.body.data.posts[1].should.have.property('title', '14');
-            res.body.data.posts[2].should.have.property('title', '8');
-            res.body.data.posts[3].should.have.property('title', '9');
-            res.body.data.posts[4].should.have.property('title', '15');
-            res.body.data.posts[5].should.have.property('title', '1');
-            res.body.data.posts[5].should.have.property('title', '20');
-            res.body.data.posts[5].should.have.property('title', '25');
-            res.body.data.posts[5].should.have.property('title', '10');
-            res.body.data.posts[5].should.have.property('title', '28');
+            res.body.data.posts[0].should.have.property('title', '8');
+            res.body.data.posts[1].should.have.property('title', '15');
+            res.body.data.posts[2].should.have.property('title', '9');
+            res.body.data.posts[3].should.have.property('title', '10');
+            res.body.data.posts[24].should.have.property('title', '16');
+            res.body.data.posts[25].should.have.property('title', '2');
+            res.body.data.posts[26].should.have.property('title', '21');
+            res.body.data.posts[27].should.have.property('title', '26');
+            res.body.data.posts[28].should.have.property('title', '11');
+            res.body.data.posts[29].should.have.property('title', '29');
             done();
         });
     });

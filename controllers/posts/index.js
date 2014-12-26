@@ -16,17 +16,28 @@ module.exports = function (router) {
 
     var index = function (req, res, options) {
 
-        var query = PostsModel.find();
+        var query = null;
+        query = PostsModel.find();
+
+        console.log(options);
+        if (options.type === 'new') {
+            query.sort({ created_at: 'desc'});
+        } else if (options.type === 'best') {
+            query.sort({ 'votes.score.total': 'desc'});
+        }
+
         var user_id = req.query.user_id || null;
+
+
         var fields = [
             '_id', 'title', 'content', 'content_type', 'author_id', 'status',
             'votes.hotness', 'votes.score.down', 'votes.score.up', 'votes.score.total',
             'created_at', 'updated_at'
         ];
+        query.select(fields.join(' '));
 
         async.waterfall([
             function (next) {
-                query.select(fields.join(' '));
                 query.exec(function (err, posts) {
                     if (err) {
                         next(utils.json.ServerError('err occurred in mongodb: '+err));
