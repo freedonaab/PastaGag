@@ -12,7 +12,9 @@ var UsersModel = require('../../models/users');
 
 module.exports = function (router) {
 
-    router.get('/', function (req, res) {
+
+
+    var index = function (req, res, options) {
 
         var query = PostsModel.find();
         var user_id = req.query.user_id || null;
@@ -93,7 +95,64 @@ module.exports = function (router) {
         });
 
 
+    };
+
+    router.get('/', function (req, res) {
+        return index(req, res, {
+            type: 'hot',
+            args: ''
+        });
     });
+
+    router.get('/hot', function (req, res) {
+        return index(req, res, {
+            type: 'hot',
+            args: ''
+        });
+    });
+
+    router.get('/new', function (req, res) {
+        return index(req, res, {
+            type: 'new',
+            args: ''
+        });
+    });
+
+    router.get('/best', function (req, res) {
+        return index(req, res, {
+            type: 'best',
+            args: 'ever'
+        });
+    });
+
+    router.get('/best/day', function (req, res) {
+        return index(req, res, {
+            type: 'best',
+            args: 'day'
+        });
+    });
+
+    router.get('/best/week', function (req, res) {
+        return index(req, res, {
+            type: 'best',
+            args: 'week'
+        });
+    });
+
+    router.get('/best/month', function (req, res) {
+        return index(req, res, {
+            type: 'best',
+            args: 'month'
+        });
+    });
+
+    router.get('/best/ever', function (req, res) {
+        return index(req, res, {
+            type: 'best',
+            args: 'ever'
+        });
+    });
+
 
     router.get('/:post_id', function (req, res) {
 
