@@ -29,6 +29,12 @@ module.exports = function (router) {
         } else if (options.args === 'month') {
             query.where('created_at').gte(moment().subtract(1, 'months'));
         }
+
+        if (options.page <= 0) {
+            options.page = 1;
+        }
+        query.skip((options.page - 1) * 20);
+        query.limit(20);
     };
 
     var index = function (req, res, options) {
@@ -123,56 +129,64 @@ module.exports = function (router) {
     router.get('/', function (req, res) {
         return index(req, res, {
             type: 'hot',
-            args: ''
+            args: '',
+            page: req.query.page || 1
         });
     });
 
     router.get('/hot', function (req, res) {
         return index(req, res, {
             type: 'hot',
-            args: ''
+            args: '',
+            page: req.query.page || 1
         });
     });
 
     router.get('/new', function (req, res) {
         return index(req, res, {
             type: 'new',
-            args: ''
+            args: '',
+            page: req.query.page || 1
         });
     });
 
     router.get('/best', function (req, res) {
         return index(req, res, {
             type: 'best',
-            args: 'ever'
+            args: 'ever',
+            page: req.query.page || 1
         });
     });
 
     router.get('/best/day', function (req, res) {
         return index(req, res, {
             type: 'best',
-            args: 'day'
+            args: 'day',
+            page: req.query.page || 1
         });
     });
 
     router.get('/best/week', function (req, res) {
         return index(req, res, {
             type: 'best',
-            args: 'week'
+            args: 'week',
+            page: req.query.page || 1
         });
     });
 
     router.get('/best/month', function (req, res) {
         return index(req, res, {
             type: 'best',
-            args: 'month'
+            args: 'month',
+            page: req.query.page || 1
         });
     });
 
     router.get('/best/ever', function (req, res) {
         return index(req, res, {
             type: 'best',
-            args: 'ever'
+            args: 'ever',
+            page: req.query.page || 1
         });
     });
 

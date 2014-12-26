@@ -89,7 +89,6 @@ describe('/posts', function () {
                 testUtils.get(config, '/posts/new')(next);
             },
             function (res, next) {
-                should.not.exist(err);
                 should.exist(res);
                 res.should.have.property('body');
                 res.body.should.have.property('metadata');
@@ -103,7 +102,6 @@ describe('/posts', function () {
                 testUtils.get(config, '/posts/new', { url_params: { page: 2 } })(next);
             },
             function (res, next) {
-                should.not.exist(err);
                 should.exist(res);
                 res.should.have.property('body');
                 res.body.should.have.property('metadata');
@@ -127,7 +125,7 @@ describe('/posts', function () {
             res.body.metadata.should.have.property('statusCode', 200);
             res.body.data.should.have.property('posts');
             res.body.data.posts.should.be.an.Array;
-            res.body.data.posts.should.have.length(10);
+            res.body.data.posts.should.have.length(5);
             done();
         });
     });
@@ -457,7 +455,6 @@ describe('/posts', function () {
                 testUtils.get(config, '/posts/best')(next);
             },
             function (res, next) {
-                should.not.exist(err);
                 should.exist(res);
                 res.should.have.property('body');
                 res.body.should.have.property('metadata');
@@ -605,7 +602,6 @@ describe('/posts', function () {
                 testUtils.get(config, '/posts/best/ever')(next);
             },
             function (res, next) {
-                should.not.exist(err);
                 should.exist(res);
                 res.should.have.property('body');
                 res.body.should.have.property('metadata');
