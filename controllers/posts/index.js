@@ -20,6 +20,8 @@ module.exports = function (router) {
             query.sort({ created_at: 'desc'});
         } else if (options.type === 'best') {
             query.sort({ 'votes.score.total': 'desc'});
+        } else if (options.type === 'hot') {
+            query.sort({ 'votes.hotness': 'desc'});
         }
 
         if (options.args === 'day') {
