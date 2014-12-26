@@ -59,8 +59,18 @@ PostSchema.methods.customCreate = function (cb) {
         down:[]
     };
     this.comments = [];
-    this.created_at = new Date();
-    this.updated_at = new Date();
+    //allow user to set a fake creation time when unit testing
+    if (process.env.NODE_ENV === 'test') {
+        if (!this.created_at) {
+            this.created_at = new Date();
+        }
+        if (!this.updated_at) {
+            this.updated_at = new Date();
+        }
+    } else {
+        this.created_at = new Date();
+        this.updated_at = new Date();
+    }
     this.votes.hotness = ranking.hotness(this);
     this.save(cb);
 };

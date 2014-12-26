@@ -188,6 +188,7 @@ module.exports = function (router) {
 
         console.log('POST /posts', post_datas);
 
+
         var post = new PostsModel();
 
         async.waterfall([
@@ -226,6 +227,11 @@ module.exports = function (router) {
                 post.content = post_datas.content;
                 post.author_id = post_datas.author_id;
                 post.content_type = content_type;
+                //allow user to set a fake creation time when unit testing
+                if (process.env.NODE_ENV === 'test') {
+                    post.created_at = post_datas.created_at;
+                    post.updated_at = post_datas.updated_at;
+                }
 
                 post.customCreate(next);
             }

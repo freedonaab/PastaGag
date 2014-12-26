@@ -35,7 +35,7 @@ describe('users', function () {
                 app.use(kraken({
                     basedir: process.cwd(),
                     onconfig: function (config, next) {
-                        db.config(config.get('database')["test"]);
+                        db.config(config.get('database'));
                         next(null, config);
                     }
                 }));

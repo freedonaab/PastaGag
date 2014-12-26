@@ -6,6 +6,8 @@ var options = require("./lib/spec");
 
 var app;
 
+process.env.NODE_ENV = process.env.NODE_ENV || 'development';
+
 app = module.exports = express();
 app.use(kraken(options));
 app.on('start', function () {

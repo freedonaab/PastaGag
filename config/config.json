@@ -23,25 +23,6 @@
             }
         }
     },
-    "database": {
-        "development": {
-            "type": "mongodb",
-            "mongodb": {
-                "host": "localhost",
-                "port": 27017,
-                "database": "pastagag"
-            }
-        },
-        "test": {
-            "type": "mongodb",
-            "mongodb": {
-                "host": "localhost",
-                "port": 27017,
-                "database": "test"
-            }
-        }
-    },
-
     "i18n": {
         "contentPath": "path:./locales",
         "fallback": "en-US"
