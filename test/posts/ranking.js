@@ -130,6 +130,76 @@ describe('/posts', function () {
         });
     });
 
+
+    it('GET /posts/ should sort by hotness', function (done) {
+        async.waterfall([
+            testUtils.createUser(config, {
+                email: "mouloud1@hotmail.fr",
+                username: "kebab94",
+                password: "wallah123"
+            }),
+            function (res, next) {
+                var userId = res.body.data.user._id;
+                _.each(postDataSet, function (p) {p.author_id = userId; });
+                testUtils.createPosts(config, _.shuffle(postDataSet))(next);
+            },
+            function (postIds, next) {
+                testUtils.get(config, '/posts/')(next);
+            }
+        ], function (err, res) {
+            should.not.exist(err);
+            should.exist(res);
+            res.should.have.property('body');
+            res.body.should.have.property('metadata');
+            res.body.should.have.property('data');
+            res.body.metadata.should.have.property('success', true);
+            res.body.metadata.should.have.property('error', null);
+            res.body.metadata.should.have.property('statusCode', 200);
+            res.body.data.should.have.property('posts');
+            res.body.data.posts.should.be.an.Array;
+            res.body.data.posts.should.have.length(20);
+            for (var i = 0; i < 19; ++i) {
+                res.body.data.posts[i].votes.hotness.should.be.greaterThan(res.body.data.posts[i + 1].votes.hotness);
+            }
+            done();
+        });
+    });
+
+    it('GET /posts/hot should sort by hotness', function (done) {
+        async.waterfall([
+            testUtils.createUser(config, {
+                email: "mouloud1@hotmail.fr",
+                username: "kebab94",
+                password: "wallah123"
+            }),
+            function (res, next) {
+                var userId = res.body.data.user._id;
+                _.each(postDataSet, function (p) {p.author_id = userId; });
+                testUtils.createPosts(config, _.shuffle(postDataSet))(next);
+            },
+            function (postIds, next) {
+                testUtils.get(config, '/posts/hot')(next);
+            }
+        ], function (err, res) {
+            should.not.exist(err);
+            should.exist(res);
+            res.should.have.property('body');
+            res.body.should.have.property('metadata');
+            res.body.should.have.property('data');
+            res.body.metadata.should.have.property('success', true);
+            res.body.metadata.should.have.property('error', null);
+            res.body.metadata.should.have.property('statusCode', 200);
+            res.body.data.should.have.property('posts');
+            res.body.data.posts.should.be.an.Array;
+            res.body.data.posts.should.have.length(20);
+            for (var i = 0; i < 19; ++i) {
+                res.body.data.posts[i].votes.hotness.should.be.greaterThan(res.body.data.posts[i + 1].votes.hotness);
+            }
+            done();
+        });
+    });
+
+
     //console.log('now', moment().format());
     //console.log('other', new Date(0, 0, 0, 1));
     //console.log('actual date', moment().subtract(1, 'hours'));
