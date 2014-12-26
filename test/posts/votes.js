@@ -553,7 +553,7 @@ describe('/posts', function () {
             },
             function (post, next) {
                 var postId = post._id;
-                testUtils.get(config, '/posts/', gerardId)(next);
+                testUtils.get(config, '/posts/', { url_params : { user_id: gerardId } })(next);
             }
         ], function (err, res) {
             should.not.exist(err);
@@ -592,7 +592,7 @@ describe('/posts', function () {
             },
             function (post, next) {
                 var postId = post._id;
-                testUtils.get(config, '/posts/', userId)(next);
+                testUtils.get(config, '/posts/', { url_params : { user_id: userId } })(next);
             }
         ], function (err, res) {
             should.not.exist(err);
@@ -636,7 +636,7 @@ describe('/posts', function () {
                 testUtils.post(config, '/posts/'+postId+'/votes/down', { user_id: userId })(next);
             },
             function (_, next) {
-                testUtils.get(config, '/posts/', userId)(next);
+                testUtils.get(config, '/posts/', { url_params : { user_id: userId } })(next);
             }
         ], function (err, res) {
             should.not.exist(err);

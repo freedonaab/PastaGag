@@ -65,6 +65,73 @@ describe('/posts', function () {
     });
 
 
+
+    it('GET /posts/ should have pagination options working', function (done) {
+        async.waterfall([
+            testUtils.createUser(config, {
+                email: "mouloud1@hotmail.fr",
+                username: "kebab94",
+                password: "wallah123"
+            }),
+            function (res, next) {
+                var userId = res.body.data.user._id;
+                var _posts = [];
+                for (var i = 0; i < 45; ++i) {
+                    _posts.push({
+                        title: i+"",
+                        content: "http://127.0.0.1:8080/fake/images/success/"+i+".jpg"
+                    });
+                }
+                _.each(_posts, function (p) {p.author_id = userId; });
+                testUtils.createPosts(config, _.shuffle(_posts))(next);
+            },
+            function (postIds, next) {
+                testUtils.get(config, '/posts/new')(next);
+            },
+            function (res, next) {
+                should.not.exist(err);
+                should.exist(res);
+                res.should.have.property('body');
+                res.body.should.have.property('metadata');
+                res.body.should.have.property('data');
+                res.body.metadata.should.have.property('success', true);
+                res.body.metadata.should.have.property('error', null);
+                res.body.metadata.should.have.property('statusCode', 200);
+                res.body.data.should.have.property('posts');
+                res.body.data.posts.should.be.an.Array;
+                res.body.data.posts.should.have.length(20);
+                testUtils.get(config, '/posts/new', { url_params: { page: 2 } })(next);
+            },
+            function (res, next) {
+                should.not.exist(err);
+                should.exist(res);
+                res.should.have.property('body');
+                res.body.should.have.property('metadata');
+                res.body.should.have.property('data');
+                res.body.metadata.should.have.property('success', true);
+                res.body.metadata.should.have.property('error', null);
+                res.body.metadata.should.have.property('statusCode', 200);
+                res.body.data.should.have.property('posts');
+                res.body.data.posts.should.be.an.Array;
+                res.body.data.posts.should.have.length(20);
+                testUtils.get(config, '/posts/new', { url_params: { page: 3 } })(next);
+            }
+        ], function (err, res) {
+            should.not.exist(err);
+            should.exist(res);
+            res.should.have.property('body');
+            res.body.should.have.property('metadata');
+            res.body.should.have.property('data');
+            res.body.metadata.should.have.property('success', true);
+            res.body.metadata.should.have.property('error', null);
+            res.body.metadata.should.have.property('statusCode', 200);
+            res.body.data.should.have.property('posts');
+            res.body.data.posts.should.be.an.Array;
+            res.body.data.posts.should.have.length(10);
+            done();
+        });
+    });
+
     //console.log('now', moment().format());
     //console.log('other', new Date(0, 0, 0, 1));
     //console.log('actual date', moment().subtract(1, 'hours'));
@@ -258,8 +325,8 @@ describe('/posts', function () {
             res.body.metadata.should.have.property('statusCode', 200);
             res.body.data.should.have.property('posts');
             res.body.data.posts.should.be.an.Array;
-            //res.body.data.posts.should.have.length(20);
-            res.body.data.posts.should.have.length(30);
+            res.body.data.posts.should.have.length(20);
+            //res.body.data.posts.should.have.length(30);
             res.body.data.posts[0].should.have.property('title', '1');
             res.body.data.posts[1].should.have.property('title', '2');
             res.body.data.posts[2].should.have.property('title', '3');
@@ -388,6 +455,26 @@ describe('/posts', function () {
             },
             function (_, next) {
                 testUtils.get(config, '/posts/best')(next);
+            },
+            function (res, next) {
+                should.not.exist(err);
+                should.exist(res);
+                res.should.have.property('body');
+                res.body.should.have.property('metadata');
+                res.body.should.have.property('data');
+                res.body.metadata.should.have.property('success', true);
+                res.body.metadata.should.have.property('error', null);
+                res.body.metadata.should.have.property('statusCode', 200);
+                res.body.data.should.have.property('posts');
+                res.body.data.posts.should.be.an.Array;
+                res.body.data.posts.should.have.length(20);
+                //res.body.data.posts.should.have.length(30);
+                res.body.data.posts[0].should.have.property('title', '8');
+                res.body.data.posts[1].should.have.property('title', '15');
+                res.body.data.posts[2].should.have.property('title', '9');
+                res.body.data.posts[3].should.have.property('title', '10');
+
+                testUtils.get(config, '/posts/best', { url_params: { page: 2 } } )(next);
             }
         ], function (err, res) {
             should.not.exist(err);
@@ -400,18 +487,13 @@ describe('/posts', function () {
             res.body.metadata.should.have.property('statusCode', 200);
             res.body.data.should.have.property('posts');
             res.body.data.posts.should.be.an.Array;
-            //res.body.data.posts.should.have.length(20);
-            res.body.data.posts.should.have.length(30);
-            res.body.data.posts[0].should.have.property('title', '8');
-            res.body.data.posts[1].should.have.property('title', '15');
-            res.body.data.posts[2].should.have.property('title', '9');
-            res.body.data.posts[3].should.have.property('title', '10');
-            res.body.data.posts[24].should.have.property('title', '16');
-            res.body.data.posts[25].should.have.property('title', '2');
-            res.body.data.posts[26].should.have.property('title', '21');
-            res.body.data.posts[27].should.have.property('title', '26');
-            res.body.data.posts[28].should.have.property('title', '11');
-            res.body.data.posts[29].should.have.property('title', '29');
+            res.body.data.posts.should.have.length(10);
+            res.body.data.posts[4].should.have.property('title', '16');
+            res.body.data.posts[5].should.have.property('title', '2');
+            res.body.data.posts[6].should.have.property('title', '21');
+            res.body.data.posts[7].should.have.property('title', '26');
+            res.body.data.posts[8].should.have.property('title', '11');
+            res.body.data.posts[9].should.have.property('title', '29');
             done();
         });
     });
@@ -521,6 +603,25 @@ describe('/posts', function () {
             },
             function (_, next) {
                 testUtils.get(config, '/posts/best/ever')(next);
+            },
+            function (res, next) {
+                should.not.exist(err);
+                should.exist(res);
+                res.should.have.property('body');
+                res.body.should.have.property('metadata');
+                res.body.should.have.property('data');
+                res.body.metadata.should.have.property('success', true);
+                res.body.metadata.should.have.property('error', null);
+                res.body.metadata.should.have.property('statusCode', 200);
+                res.body.data.should.have.property('posts');
+                res.body.data.posts.should.be.an.Array;
+                res.body.data.posts.should.have.length(20);
+                //res.body.data.posts.should.have.length(30);
+                res.body.data.posts[0].should.have.property('title', '8');
+                res.body.data.posts[1].should.have.property('title', '15');
+                res.body.data.posts[2].should.have.property('title', '9');
+                res.body.data.posts[3].should.have.property('title', '10');
+                testUtils.get(config, '/posts/best/ever', { url_params: { page: 2 } })(next);
             }
         ], function (err, res) {
             should.not.exist(err);
@@ -533,18 +634,14 @@ describe('/posts', function () {
             res.body.metadata.should.have.property('statusCode', 200);
             res.body.data.should.have.property('posts');
             res.body.data.posts.should.be.an.Array;
-            //res.body.data.posts.should.have.length(20);
-            res.body.data.posts.should.have.length(30);
-            res.body.data.posts[0].should.have.property('title', '8');
-            res.body.data.posts[1].should.have.property('title', '15');
-            res.body.data.posts[2].should.have.property('title', '9');
-            res.body.data.posts[3].should.have.property('title', '10');
-            res.body.data.posts[24].should.have.property('title', '16');
-            res.body.data.posts[25].should.have.property('title', '2');
-            res.body.data.posts[26].should.have.property('title', '21');
-            res.body.data.posts[27].should.have.property('title', '26');
-            res.body.data.posts[28].should.have.property('title', '11');
-            res.body.data.posts[29].should.have.property('title', '29');
+            res.body.data.posts.should.have.length(10);
+            //res.body.data.posts.should.have.length(30);
+            res.body.data.posts[4].should.have.property('title', '16');
+            res.body.data.posts[5].should.have.property('title', '2');
+            res.body.data.posts[6].should.have.property('title', '21');
+            res.body.data.posts[7].should.have.property('title', '26');
+            res.body.data.posts[8].should.have.property('title', '11');
+            res.body.data.posts[9].should.have.property('title', '29');
             done();
         });
     });
@@ -666,7 +763,8 @@ describe('/posts', function () {
             res.body.data.should.have.property('posts');
             res.body.data.posts.should.be.an.Array;
             //15 9 10 1 3 4 5 6 7 8 12 13 14 17 18 19 20 22 23 24 25 16 2 21 11
-            res.body.data.posts.should.have.length(25);
+            //res.body.data.posts.should.have.length(25);
+            res.body.data.posts.should.have.length(20);
             res.body.data.posts[0].should.have.property('title', '15');
             res.body.data.posts[1].should.have.property('title', '9');
             res.body.data.posts[2].should.have.property('title', '10');
