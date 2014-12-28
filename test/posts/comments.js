@@ -282,7 +282,7 @@ describe('/posts', function () {
                 res.body.data.should.have.property('comment');
                 res.body.data.comment.should.have.property('_id', '0');
 
-                testUtils.post(config, '/posts/'+post._id+'/comments/'+'0', {
+                testUtils.post(config, '/posts/'+post._id+'/comments/'+'0/reply', {
                     author_id: userId,
                     message: 'depth 1'
                 })(next);
@@ -298,7 +298,7 @@ describe('/posts', function () {
                 res.body.data.should.have.property('comment');
                 res.body.data.comment.should.have.property('_id', '0.0');
 
-                testUtils.post(config, '/posts/'+post._id+'/comments/'+'0.0', {
+                testUtils.post(config, '/posts/'+post._id+'/comments/'+'0.0/reply', {
                     author_id: userId,
                     message: 'depth 2'
                 })(next);
@@ -314,7 +314,7 @@ describe('/posts', function () {
                 res.body.data.should.have.property('comment');
                 res.body.data.comment.should.have.property('_id', '0.0.0');
 
-                testUtils.post(config, '/posts/'+post._id+'/comments/'+'0.0.0', {
+                testUtils.post(config, '/posts/'+post._id+'/comments/'+'0.0.0/reply', {
                     author_id: userId,
                     message: 'depth 3'
                 })(next);
@@ -330,7 +330,7 @@ describe('/posts', function () {
                 res.body.data.should.have.property('comment');
                 res.body.data.comment.should.have.property('_id', '0.0.0.0');
 
-                testUtils.post(config, '/posts/'+post._id+'/comments/'+'0.0.0.0', {
+                testUtils.post(config, '/posts/'+post._id+'/comments/'+'0.0.0.0/reply', {
                     author_id: userId,
                     message: 'depth 4'
                 })(next);
@@ -437,7 +437,7 @@ describe('/posts', function () {
                 res.body.data.should.have.property('comment');
                 res.body.data.comment.should.have.property('_id', '0');
 
-                testUtils.post(config, '/posts/'+post._id+'/comments/'+'0', {
+                testUtils.post(config, '/posts/'+post._id+'/comments/'+'0/reply', {
                     author_id: jeanKevinId,
                     message: 'depth 1'
                 })(next);
@@ -453,7 +453,7 @@ describe('/posts', function () {
                 res.body.data.should.have.property('comment');
                 res.body.data.comment.should.have.property('_id', '0.0');
 
-                testUtils.post(config, '/posts/'+post._id+'/comments/'+'0.0', {
+                testUtils.post(config, '/posts/'+post._id+'/comments/'+'0.0/reply', {
                     author_id: mouloudId,
                     message: 'depth 2'
                 })(next);
@@ -469,7 +469,7 @@ describe('/posts', function () {
                 res.body.data.should.have.property('comment');
                 res.body.data.comment.should.have.property('_id', '0.0.0');
 
-                testUtils.post(config, '/posts/'+post._id+'/comments/'+'0.0.0', {
+                testUtils.post(config, '/posts/'+post._id+'/comments/'+'0.0.0/reply', {
                     author_id: jeanKevinId,
                     message: 'depth 3'
                 })(next);
@@ -485,7 +485,7 @@ describe('/posts', function () {
                 res.body.data.should.have.property('comment');
                 res.body.data.comment.should.have.property('_id', '0.0.0.0');
 
-                testUtils.post(config, '/posts/'+post._id+'/comments/'+'0.0.0.0', {
+                testUtils.post(config, '/posts/'+post._id+'/comments/'+'0.0.0.0/reply', {
                     author_id: mouloudId,
                     message: 'depth 4'
                 })(next);

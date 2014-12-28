@@ -148,7 +148,7 @@ module.exports = function (router) {
         _recurs(post.comments[0], 0);
     };
 
-    router.post('/:post_id/comments/:comment_id', function (req, res) {
+    router.post('/:post_id/comments/:comment_id/reply', function (req, res) {
 
         var post_id = req.params.post_id;
 
