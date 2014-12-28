@@ -245,7 +245,8 @@ describe('/posts', function () {
             res.body.metadata.should.have.property('error', null);
             res.body.metadata.should.have.property('statusCode', 200);
             res.body.data.should.have.property('posts');
-            res.body.data.posts.should.be.an.Array;
+            //TODO: find a way to properly assert that a value is an array
+            res.body.data.posts.should.be.an.Object;
             res.body.data.posts.should.have.length(3);
             for (var i = 0; i < res.body.data.posts.length; ++i) {
                 res.body.data.posts[i].should.have.property('title');

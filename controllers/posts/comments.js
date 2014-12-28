@@ -13,6 +13,10 @@ var UsersModel = require('../../models/users');
 module.exports = function (router) {
 
 
+    //router.post('/:post_id/comments/'); //-> reply to post :post_id
+    //router.post('/:post_id/comments/:comment_id'); //-> reply to comment :comment_id on post :post_id
+    //router.del('/:post_id/comments/:comment_id'); //-> delete comment :comment_id on post :post_id
+
     router.post('/:post_id/comments/test1', function (req, res) {
 
         async.waterfall([

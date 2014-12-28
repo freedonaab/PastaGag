@@ -12,6 +12,7 @@ var CommentSchema = new mongoose.Schema({
     user_id: ObjectId,
     message: String,
     votes: {
+        hotness: Number,
         score: {
             up: Number,
             down: Number,
