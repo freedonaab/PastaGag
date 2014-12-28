@@ -10,7 +10,10 @@ connection = mongoose;
 
 var CommentSchema = new mongoose.Schema({
     _id: String,
-    author_id: ObjectId,
+    author: {
+        _id: ObjectId,
+        username: String
+    },
     message: String,
     votes: {
         hotness: Number,
@@ -31,7 +34,10 @@ var PostSchema = new mongoose.Schema({
     title: String,
     content: String,
     content_type: String,
-    author_id: ObjectId,
+    author: {
+        _id: ObjectId,
+        username: String
+    },
     status: String,
     votes: {
         hotness: Number,
@@ -57,7 +63,7 @@ PostSchema.methods.customCreate = function (cb) {
             down: 0,
             total: 1
         },
-        ups: [this.author_id],
+        ups: [this.author._id],
         down:[]
     };
     this.comments = [];

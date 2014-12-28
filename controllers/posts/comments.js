@@ -29,9 +29,24 @@ module.exports = function (router) {
         }
 
         var fields = ['_id', 'comments'];
+        var user = null;
 
         async.waterfall([
             function (next) {
+                //TODO optimize this query and only select _id and username
+                UsersModel.findById(author_id, function (err, doc) {
+                    //console.log('after UsersModel.findById', arguments);
+                    if (err) {
+                        next(utils.json.ServerError('error occured in mongodb : '+err));
+                    } else if (!doc) {
+                        next(utils.json.NotFound(author_id, 'User'));
+                    } else {
+                        next(null, doc);
+                    }
+                });
+            },
+            function (_user, next) {
+                user = _user;
                 //first get the post we want to comment
                 PostsModel.findById(post_id, fields.join(' '),
                     function (err, post) {
@@ -47,7 +62,10 @@ module.exports = function (router) {
             function (post, next) {
                 var new_comment = {
                     _id: post.comments.length,
-                    author_id: author_id,
+                    author: {
+                        _id: user._id,
+                        username: user.username
+                    },
                     message: message,
                     votes: {
                         hotness: 0,
@@ -56,7 +74,7 @@ module.exports = function (router) {
                             down: 0,
                             total: 1
                         },
-                        ups: [author_id],
+                        ups: [user._id],
                         downs: []
                     },
                     replies: [],
@@ -145,9 +163,24 @@ module.exports = function (router) {
 
         var fields = ['_id', 'comments'];
 
+        var user = null;
         //TODO: find a way to sort the comments
         async.waterfall([
             function (next) {
+                //TODO optimize this query and only select _id and username
+                UsersModel.findById(author_id, function (err, doc) {
+                    //console.log('after UsersModel.findById', arguments);
+                    if (err) {
+                        next(utils.json.ServerError('error occured in mongodb : '+err));
+                    } else if (!doc) {
+                        next(utils.json.NotFound(author_id, 'User'));
+                    } else {
+                        next(null, doc);
+                    }
+                });
+            },
+            function (_user, next) {
+                user = _user;
                 //first get the post we want to comment
                 var depthString = commentIdToDepthString(comment_id);
                 var searchParams = {
@@ -171,7 +204,10 @@ module.exports = function (router) {
                 //console.log('POST new comment', comment_id, parent_comment, new_comment_id );
                 var new_comment = {
                     _id: new_comment_id,
-                    author_id: author_id,
+                    author: {
+                        _id: user._id,
+                        username: user.username
+                    },
                     message: message,
                     votes: {
                         hotness: 0,
@@ -180,7 +216,7 @@ module.exports = function (router) {
                             down: 0,
                             total: 1
                         },
-                        ups: [author_id],
+                        ups: [user._id],
                         downs: []
                     },
                     replies: [],

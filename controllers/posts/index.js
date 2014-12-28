@@ -53,12 +53,11 @@ module.exports = function (router) {
 
 
         var fields = [
-            '_id', 'title', 'content', 'content_type', 'author_id', 'status',
+            '_id', 'title', 'content', 'content_type', 'author', 'status',
             'votes.hotness', 'votes.score.down', 'votes.score.up', 'votes.score.total',
             'created_at', 'updated_at'
         ];
         query.select(fields.join(' '));
-
         async.waterfall([
             function (next) {
                 query.exec(function (err, posts) {
@@ -266,7 +265,6 @@ module.exports = function (router) {
             }
         ], function (err) {
             if (err) {
-                console.log(err);
                 utils.respondJSON(res, err);
             } else {
                 utils.respondJSON(res, utils.json.Ok({ post: _global.post }));
@@ -291,24 +289,27 @@ module.exports = function (router) {
             return utils.respondJSON(res,  utils.json.BadRequest('field post.content is required'));
         }
 
-        console.log('POST /posts', post_datas);
-
 
         var post = new PostsModel();
+        var user = null;
 
         async.waterfall([
             function (next) {
                 //check if author_id exists
+                //TODO optimize this query and only select _id and username
                 UsersModel.findById(post_datas.author_id, function (err, doc) {
                     //console.log('after UsersModel.findById', arguments);
-                    if (err || !doc) {
+                    if (err) {
+                        next(utils.json.ServerError('error occured in mongodb : '+err));
+                    } else if (!doc) {
                         next(utils.json.NotFound(post_datas.author_id, 'User'));
                     } else {
-                        next(null);
+                        next(null, doc);
                     }
                 });
             },
-            function (next) {
+            function (_user, next) {
+                user = _user;
                 //check if the url is valid and recognized
                 if (!urlCheck.isUrl(post_datas.content)) {
                     return next(utils.json.BadRequest('content is not a valid url'));
@@ -330,7 +331,10 @@ module.exports = function (router) {
                 //create the document in the database
                 post.title = post_datas.title;
                 post.content = post_datas.content;
-                post.author_id = post_datas.author_id;
+                post.author = {
+                    _id: user._id,
+                    username: user.username
+                };
                 post.content_type = content_type;
                 //allow user to set a fake creation time when unit testing
                 if (process.env.NODE_ENV === 'test') {
