@@ -9,7 +9,8 @@ var ObjectId = mongoose.Schema.Types.ObjectId;
 connection = mongoose;
 
 var CommentSchema = new mongoose.Schema({
-    user_id: ObjectId,
+    _id: String,
+    author_id: ObjectId,
     message: String,
     votes: {
         hotness: Number,

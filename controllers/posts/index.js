@@ -205,10 +205,13 @@ module.exports = function (router) {
             return utils.respondJSON(res, utils.json.BadRequest('url param post_id is required'));
         }
 
+        //var fields = [
+        //    '_id', 'title', 'content', 'content_type', 'author_id', 'status',
+        //    'votes.hotness', 'votes.score.down', 'votes.score.up', 'votes.score.total',
+        //    'comments', 'created_at', 'updated_at', '-comments.votes.ups', '-comments.votes.downs'
+        //];
         var fields = [
-            '_id', 'title', 'content', 'content_type', 'author_id', 'status',
-            'votes.hotness', 'votes.score.down', 'votes.score.up', 'votes.score.total',
-            'comments', 'created_at', 'updated_at'
+            '-votes.ups', '-votes.downs', '-comments.votes.ups', '-comments.votes.downs'
         ];
         var _global = {
             votedUp: false,
@@ -263,6 +266,7 @@ module.exports = function (router) {
             }
         ], function (err) {
             if (err) {
+                console.log(err);
                 utils.respondJSON(res, err);
             } else {
                 utils.respondJSON(res, utils.json.Ok({ post: _global.post }));

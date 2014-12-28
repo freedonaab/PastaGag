@@ -48,12 +48,21 @@ describe('/posts', function () {
             },
             function (_post, next) {
                 post = _post;
-                testUtils.post(config, '/posts/'+post._id+'/comments', {
-                    user_id: userId,
+                testUtils.postWithErrorChecking(config, '/posts/'+post._id+'/comments', {
+                    author_id: userId,
                     message: 'my first comment'
                 })(next);
             },
-            function (_, next) {
+            function (res, next) {
+                should.exist(res);
+                res.should.have.property('body');
+                res.body.should.have.property('metadata');
+                res.body.should.have.property('data');
+                res.body.metadata.should.have.property('success', true);
+                res.body.metadata.should.have.property('error', null);
+                res.body.metadata.should.have.property('statusCode', 200);
+                res.body.data.should.have.property('comment');
+                res.body.data.comment.should.have.property('_id', '0');
                 testUtils.getPostWithErrorChecking(config, post._id)(next);
             }
         ], function (err, post) {
@@ -62,18 +71,22 @@ describe('/posts', function () {
             post.should.have.property('comments');
             post.comments.should.be.an.Array;
             post.comments.should.have.length(1);
+            post.comments[0].should.have.property('_id', '0');
             post.comments[0].should.have.property('message', 'my first comment');
-            post.comments[0].should.have.property('user_id', userId);
+            post.comments[0].should.have.property('author_id', userId);
             post.comments[0].should.have.property('votes');
             post.comments[0].votes.should.have.property('hotness');
             post.comments[0].votes.hotness.should.be.greaterThan(0);
             post.comments[0].votes.should.have.property('score');
+            post.comments[0].votes.should.not.have.property('ups');
+            post.comments[0].votes.should.not.have.property('downs');
             post.comments[0].votes.score.should.have.property('up', 1);
             post.comments[0].votes.score.should.have.property('down', 0);
             post.comments[0].votes.score.should.have.property('up', 1);
             post.comments[0].votes.score.should.have.property('total', 1);
             post.comments[0].should.have.property('replies');
             post.comments[0].replies.should.have.be.an.Array;
+            post.comments[0].replies.should.have.have.length(0);
             post.comments[0].should.have.property('created_at');
             post.comments[0].should.have.property('updated_at');
             done();
@@ -99,18 +112,36 @@ describe('/posts', function () {
             },
             function (_post, next) {
                 post = _post;
-                testUtils.post(config, '/posts/'+post._id+'/comments', {
-                    user_id: userId,
+                testUtils.postWithErrorChecking(config, '/posts/'+post._id+'/comments', {
+                    author_id: userId,
                     message: 'my first comment'
                 })(next);
             },
-            function (_, next) {
-                testUtils.post(config, '/posts/'+post._id+'/comments', {
-                    user_id: userId,
+            function (res, next) {
+                should.exist(res);
+                res.should.have.property('body');
+                res.body.should.have.property('metadata');
+                res.body.should.have.property('data');
+                res.body.metadata.should.have.property('success', true);
+                res.body.metadata.should.have.property('error', null);
+                res.body.metadata.should.have.property('statusCode', 200);
+                res.body.data.should.have.property('comment');
+                res.body.data.comment.should.have.property('_id', '0');
+                testUtils.postWithErrorChecking(config, '/posts/'+post._id+'/comments', {
+                    author_id: userId,
                     message: 'my second comment'
                 })(next);
             },
-            function (_, next) {
+            function (res, next) {
+                should.exist(res);
+                res.should.have.property('body');
+                res.body.should.have.property('metadata');
+                res.body.should.have.property('data');
+                res.body.metadata.should.have.property('success', true);
+                res.body.metadata.should.have.property('error', null);
+                res.body.metadata.should.have.property('statusCode', 200);
+                res.body.data.should.have.property('comment');
+                res.body.data.comment.should.have.property('_id', '1');
                 testUtils.getPostWithErrorChecking(config, post._id)(next);
             }
         ], function (err, post) {
@@ -120,9 +151,11 @@ describe('/posts', function () {
             post.comments.should.be.an.Array;
             post.comments.should.have.length(2);
             post.comments[0].should.have.property('message', 'my first comment');
-            post.comments[0].should.have.property('user_id', userId);
+            post.comments[0].should.have.property('author_id', userId);
+            post.comments[0].should.have.property('_id', '0');
             post.comments[1].should.have.property('message', 'my second comment');
-            post.comments[1].should.have.property('user_id', userId);
+            post.comments[1].should.have.property('author_id', userId);
+            post.comments[1].should.have.property('_id', '1');
             done();
         });
     });
@@ -145,7 +178,6 @@ describe('/posts', function () {
             function (userIds, next) {
                 mouloudId = userIds[0];
                 jeanKevinId = userIds[1];
-                console.log(userIds);
                 testUtils.createPostWithErrorChecking(config, {
                     title: "Watch this adorable little puppy die in fire",
                     content: "http://127.0.0.1:8080/fake/images/success/123456.jpg",
@@ -155,17 +187,37 @@ describe('/posts', function () {
             function (_post, next) {
                 post = _post;
                 testUtils.post(config, '/posts/'+post._id+'/comments', {
-                    user_id: mouloudId,
+                    author_id: mouloudId,
                     message: 'my first comment'
                 })(next);
             },
-            function (_, next) {
+            function (res, next) {
+                should.exist(res);
+                res.should.have.property('body');
+                res.body.should.have.property('metadata');
+                res.body.should.have.property('data');
+                res.body.metadata.should.have.property('success', true);
+                res.body.metadata.should.have.property('error', null);
+                res.body.metadata.should.have.property('statusCode', 200);
+                res.body.data.should.have.property('comment');
+                res.body.data.comment.should.have.property('_id', '0');
+
                 testUtils.post(config, '/posts/'+post._id+'/comments', {
-                    user_id: jeanKevinId,
+                    author_id: jeanKevinId,
                     message: 'my first comment too'
                 })(next);
             },
-            function (_, next) {
+            function (res, next) {
+                should.exist(res);
+                res.should.have.property('body');
+                res.body.should.have.property('metadata');
+                res.body.should.have.property('data');
+                res.body.metadata.should.have.property('success', true);
+                res.body.metadata.should.have.property('error', null);
+                res.body.metadata.should.have.property('statusCode', 200);
+                res.body.data.should.have.property('comment');
+                res.body.data.comment.should.have.property('_id', '1');
+
                 testUtils.getPostWithErrorChecking(config, post._id)(next);
             }
         ], function (err, post) {
@@ -175,9 +227,11 @@ describe('/posts', function () {
             post.comments.should.be.an.Array;
             post.comments.should.have.length(2);
             post.comments[0].should.have.property('message', 'my first comment');
-            post.comments[0].should.have.property('user_id', mouloudId);
+            post.comments[0].should.have.property('author_id', mouloudId);
+            post.comments[0].should.have.property('_id', '0');
             post.comments[1].should.have.property('message', 'my first comment too');
-            post.comments[1].should.have.property('user_id', jeanKevinId);
+            post.comments[1].should.have.property('author_id', jeanKevinId);
+            post.comments[1].should.have.property('_id', '1');
             done();
         });
     });
@@ -203,35 +257,85 @@ describe('/posts', function () {
             function (_post, next) {
                 post = _post;
                 testUtils.post(config, '/posts/'+post._id+'/comments', {
-                    user_id: userId,
+                    author_id: userId,
                     message: 'depth 0'
                 })(next);
             },
-            function (_, next) {
+            function (res, next) {
+                should.exist(res);
+                res.should.have.property('body');
+                res.body.should.have.property('metadata');
+                res.body.should.have.property('data');
+                res.body.metadata.should.have.property('success', true);
+                res.body.metadata.should.have.property('error', null);
+                res.body.metadata.should.have.property('statusCode', 200);
+                res.body.data.should.have.property('comment');
+                res.body.data.comment.should.have.property('_id', '0');
+
                 testUtils.post(config, '/posts/'+post._id+'/comments/'+'0', {
-                    user_id: userId,
+                    author_id: userId,
                     message: 'depth 1'
                 })(next);
             },
-            function (_, next) {
+            function (res, next) {
+                should.exist(res);
+                res.should.have.property('body');
+                res.body.should.have.property('metadata');
+                res.body.should.have.property('data');
+                res.body.metadata.should.have.property('success', true);
+                res.body.metadata.should.have.property('error', null);
+                res.body.metadata.should.have.property('statusCode', 200);
+                res.body.data.should.have.property('comment');
+                res.body.data.comment.should.have.property('_id', '0.0');
+
                 testUtils.post(config, '/posts/'+post._id+'/comments/'+'0.0', {
-                    user_id: userId,
+                    author_id: userId,
                     message: 'depth 2'
                 })(next);
             },
-            function (_, next) {
+            function (res, next) {
+                should.exist(res);
+                res.should.have.property('body');
+                res.body.should.have.property('metadata');
+                res.body.should.have.property('data');
+                res.body.metadata.should.have.property('success', true);
+                res.body.metadata.should.have.property('error', null);
+                res.body.metadata.should.have.property('statusCode', 200);
+                res.body.data.should.have.property('comment');
+                res.body.data.comment.should.have.property('_id', '0.0.0');
+
                 testUtils.post(config, '/posts/'+post._id+'/comments/'+'0.0.0', {
-                    user_id: userId,
+                    author_id: userId,
                     message: 'depth 3'
                 })(next);
             },
-            function (_, next) {
+            function (res, next) {
+                should.exist(res);
+                res.should.have.property('body');
+                res.body.should.have.property('metadata');
+                res.body.should.have.property('data');
+                res.body.metadata.should.have.property('success', true);
+                res.body.metadata.should.have.property('error', null);
+                res.body.metadata.should.have.property('statusCode', 200);
+                res.body.data.should.have.property('comment');
+                res.body.data.comment.should.have.property('_id', '0.0.0.0');
+
                 testUtils.post(config, '/posts/'+post._id+'/comments/'+'0.0.0.0', {
-                    user_id: userId,
+                    author_id: userId,
                     message: 'depth 4'
                 })(next);
             },
-            function (_, next) {
+            function (res, next) {
+                should.exist(res);
+                res.should.have.property('body');
+                res.body.should.have.property('metadata');
+                res.body.should.have.property('data');
+                res.body.metadata.should.have.property('success', true);
+                res.body.metadata.should.have.property('error', null);
+                res.body.metadata.should.have.property('statusCode', 200);
+                res.body.data.should.have.property('comment');
+                res.body.data.comment.should.have.property('_id', '0.0.0.0.0');
+
                 testUtils.getPostWithErrorChecking(config, post._id)(next);
             }
         ], function (err, post) {
@@ -239,29 +343,34 @@ describe('/posts', function () {
             should.exist(post);
             post.should.have.property('comments');
             post.comments.should.be.an.Array;
-            post.comments.should.have.length(2);
+            post.comments.should.have.length(1);
+            post.comments[0].should.have.property('_id', '0');
             post.comments[0].should.have.property('message', 'depth 0');
-            post.comments[0].should.have.property('user_id', userId);
+            post.comments[0].should.have.property('author_id', userId);
 
             post.comments[0].replies.should.be.an.Array;
             post.comments[0].replies.should.have.length(1);
+            post.comments[0].replies[0].should.have.property('_id', '0.0');
             post.comments[0].replies[0].should.have.property('message', 'depth 1');
-            post.comments[0].replies[0].should.have.property('user_id', userId);
+            post.comments[0].replies[0].should.have.property('author_id', userId);
 
             post.comments[0].replies[0].replies.should.be.an.Array;
             post.comments[0].replies[0].replies.should.have.length(1);
             post.comments[0].replies[0].replies[0].should.have.property('message', 'depth 2');
-            post.comments[0].replies[0].replies[0].should.have.property('user_id', userId);
+            post.comments[0].replies[0].replies[0].should.have.property('_id', '0.0.0');
+            post.comments[0].replies[0].replies[0].should.have.property('author_id', userId);
 
             post.comments[0].replies[0].replies[0].replies.should.be.an.Array;
             post.comments[0].replies[0].replies[0].replies.should.have.length(1);
             post.comments[0].replies[0].replies[0].replies[0].should.have.property('message', 'depth 3');
-            post.comments[0].replies[0].replies[0].replies[0].should.have.property('user_id', userId);
+            post.comments[0].replies[0].replies[0].replies[0].should.have.property('_id', '0.0.0.0');
+            post.comments[0].replies[0].replies[0].replies[0].should.have.property('author_id', userId);
 
             post.comments[0].replies[0].replies[0].replies[0].replies.should.be.an.Array;
             post.comments[0].replies[0].replies[0].replies[0].replies.should.have.length(1);
             post.comments[0].replies[0].replies[0].replies[0].replies[0].should.have.property('message', 'depth 4');
-            post.comments[0].replies[0].replies[0].replies[0].replies[0].should.have.property('user_id', userId);
+            post.comments[0].replies[0].replies[0].replies[0].replies[0].should.have.property('_id', '0.0.0.0.0');
+            post.comments[0].replies[0].replies[0].replies[0].replies[0].should.have.property('author_id', userId);
             done();
         });
     });
@@ -293,35 +402,85 @@ describe('/posts', function () {
             function (_post, next) {
                 post = _post;
                 testUtils.post(config, '/posts/'+post._id+'/comments', {
-                    user_id: mouloudId,
+                    author_id: mouloudId,
                     message: 'depth 0'
                 })(next);
             },
-            function (_, next) {
+            function (res, next) {
+                should.exist(res);
+                res.should.have.property('body');
+                res.body.should.have.property('metadata');
+                res.body.should.have.property('data');
+                res.body.metadata.should.have.property('success', true);
+                res.body.metadata.should.have.property('error', null);
+                res.body.metadata.should.have.property('statusCode', 200);
+                res.body.data.should.have.property('comment');
+                res.body.data.comment.should.have.property('_id', '0');
+
                 testUtils.post(config, '/posts/'+post._id+'/comments/'+'0', {
-                    user_id: jeanKevinId,
+                    author_id: jeanKevinId,
                     message: 'depth 1'
                 })(next);
             },
-            function (_, next) {
+            function (res, next) {
+                should.exist(res);
+                res.should.have.property('body');
+                res.body.should.have.property('metadata');
+                res.body.should.have.property('data');
+                res.body.metadata.should.have.property('success', true);
+                res.body.metadata.should.have.property('error', null);
+                res.body.metadata.should.have.property('statusCode', 200);
+                res.body.data.should.have.property('comment');
+                res.body.data.comment.should.have.property('_id', '0.0');
+
                 testUtils.post(config, '/posts/'+post._id+'/comments/'+'0.0', {
-                    user_id: mouloudId,
+                    author_id: mouloudId,
                     message: 'depth 2'
                 })(next);
             },
-            function (_, next) {
+            function (res, next) {
+                should.exist(res);
+                res.should.have.property('body');
+                res.body.should.have.property('metadata');
+                res.body.should.have.property('data');
+                res.body.metadata.should.have.property('success', true);
+                res.body.metadata.should.have.property('error', null);
+                res.body.metadata.should.have.property('statusCode', 200);
+                res.body.data.should.have.property('comment');
+                res.body.data.comment.should.have.property('_id', '0.0.0');
+
                 testUtils.post(config, '/posts/'+post._id+'/comments/'+'0.0.0', {
-                    user_id: jeanKevinId,
+                    author_id: jeanKevinId,
                     message: 'depth 3'
                 })(next);
             },
-            function (_, next) {
+            function (res, next) {
+                should.exist(res);
+                res.should.have.property('body');
+                res.body.should.have.property('metadata');
+                res.body.should.have.property('data');
+                res.body.metadata.should.have.property('success', true);
+                res.body.metadata.should.have.property('error', null);
+                res.body.metadata.should.have.property('statusCode', 200);
+                res.body.data.should.have.property('comment');
+                res.body.data.comment.should.have.property('_id', '0.0.0.0');
+
                 testUtils.post(config, '/posts/'+post._id+'/comments/'+'0.0.0.0', {
-                    user_id: mouloudId,
+                    author_id: mouloudId,
                     message: 'depth 4'
                 })(next);
             },
-            function (_, next) {
+            function (res, next) {
+                should.exist(res);
+                res.should.have.property('body');
+                res.body.should.have.property('metadata');
+                res.body.should.have.property('data');
+                res.body.metadata.should.have.property('success', true);
+                res.body.metadata.should.have.property('error', null);
+                res.body.metadata.should.have.property('statusCode', 200);
+                res.body.data.should.have.property('comment');
+                res.body.data.comment.should.have.property('_id', '0.0.0.0.0');
+
                 testUtils.getPostWithErrorChecking(config, post._id)(next);
             }
         ], function (err, post) {
@@ -329,29 +488,34 @@ describe('/posts', function () {
             should.exist(post);
             post.should.have.property('comments');
             post.comments.should.be.an.Array;
-            post.comments.should.have.length(2);
+            post.comments.should.have.length(1);
+            post.comments[0].should.have.property('_id', '0');
             post.comments[0].should.have.property('message', 'depth 0');
-            post.comments[0].should.have.property('user_id', mouloudId);
+            post.comments[0].should.have.property('author_id', mouloudId);
 
             post.comments[0].replies.should.be.an.Array;
             post.comments[0].replies.should.have.length(1);
+            post.comments[0].replies[0].should.have.property('_id', '0.0');
             post.comments[0].replies[0].should.have.property('message', 'depth 1');
-            post.comments[0].replies[0].should.have.property('user_id', jeanKevinId);
+            post.comments[0].replies[0].should.have.property('author_id', jeanKevinId);
 
             post.comments[0].replies[0].replies.should.be.an.Array;
             post.comments[0].replies[0].replies.should.have.length(1);
+            post.comments[0].replies[0].replies[0].should.have.property('_id', '0.0.0');
             post.comments[0].replies[0].replies[0].should.have.property('message', 'depth 2');
-            post.comments[0].replies[0].replies[0].should.have.property('user_id', mouloudId);
+            post.comments[0].replies[0].replies[0].should.have.property('author_id', mouloudId);
 
             post.comments[0].replies[0].replies[0].replies.should.be.an.Array;
             post.comments[0].replies[0].replies[0].replies.should.have.length(1);
+            post.comments[0].replies[0].replies[0].replies[0].should.have.property('_id', '0.0.0.0');
             post.comments[0].replies[0].replies[0].replies[0].should.have.property('message', 'depth 3');
-            post.comments[0].replies[0].replies[0].replies[0].should.have.property('user_id', jeanKevinId);
+            post.comments[0].replies[0].replies[0].replies[0].should.have.property('author_id', jeanKevinId);
 
             post.comments[0].replies[0].replies[0].replies[0].replies.should.be.an.Array;
             post.comments[0].replies[0].replies[0].replies[0].replies.should.have.length(1);
+            post.comments[0].replies[0].replies[0].replies[0].replies[0].should.have.property('_id', '0.0.0.0.0');
             post.comments[0].replies[0].replies[0].replies[0].replies[0].should.have.property('message', 'depth 4');
-            post.comments[0].replies[0].replies[0].replies[0].replies[0].should.have.property('user_id', mouloudId);
+            post.comments[0].replies[0].replies[0].replies[0].replies[0].should.have.property('author_id', mouloudId);
             done();
         });
     });
