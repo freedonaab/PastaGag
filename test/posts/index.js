@@ -169,6 +169,7 @@ describe('/posts', function () {
     });
 
     it('GET a post should not retrieve all fields', function (done) {
+        var userId = null;
         async.waterfall([
             testUtils.createUser(config, {
                 email: "mouloud1@hotmail.fr",
@@ -176,7 +177,7 @@ describe('/posts', function () {
                 password: "wallah123"
             }),
             function (res, next) {
-                var userId = res.body.data.user._id;
+                userId = res.body.data.user._id;
                 testUtils.createPostWithErrorChecking(config, {
                     title: "Watch this adorable little puppy die in fire",
                     content: "http://127.0.0.1:8080/fake/images/success/123456.gif",
@@ -192,7 +193,9 @@ describe('/posts', function () {
             post.should.have.property("title", "Watch this adorable little puppy die in fire");
             post.should.have.property("content", "http://127.0.0.1:8080/fake/images/success/123456.gif");
             post.should.have.property("content_type", "image");
-            post.should.have.property('author_id');
+            post.should.have.property('author');
+            post.author.should.have.property('_id', userId);
+            post.author.should.have.property('username', 'kebab94');
             post.should.have.property('status');
             post.should.have.property('votes');
             post.votes.should.have.property('hotness');
@@ -210,6 +213,7 @@ describe('/posts', function () {
     });
 
     it('when retrieving a list of posts, not all fields should be present', function (done) {
+        var userId = null;
         async.waterfall([
             testUtils.createUser(config, {
                 email: "mouloud1@hotmail.fr",
@@ -217,7 +221,7 @@ describe('/posts', function () {
                 password: "wallah123"
             }),
             function (res, next) {
-                var userId = res.body.data.user._id;
+                userId = res.body.data.user._id;
                 testUtils.createPosts(config, [{
                     title: "Watch this adorable little puppy die in fire",
                     content: "http://127.0.0.1:8080/fake/images/success/123456.jpg",
@@ -252,7 +256,9 @@ describe('/posts', function () {
                 res.body.data.posts[i].should.have.property('title');
                 res.body.data.posts[i].should.have.property('content');
                 res.body.data.posts[i].should.have.property('content_type');
-                res.body.data.posts[i].should.have.property('author_id');
+                res.body.data.posts[i].should.have.property('author');
+                res.body.data.posts[i].author.should.have.property('_id', userId);
+                res.body.data.posts[i].author.should.have.property('username', 'kebab94');
                 res.body.data.posts[i].should.have.property('status');
                 res.body.data.posts[i].should.have.property('votes');
                 res.body.data.posts[i].votes.should.have.property('hotness');

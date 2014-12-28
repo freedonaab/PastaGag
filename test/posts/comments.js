@@ -73,7 +73,9 @@ describe('/posts', function () {
             post.comments.should.have.length(1);
             post.comments[0].should.have.property('_id', '0');
             post.comments[0].should.have.property('message', 'my first comment');
-            post.comments[0].should.have.property('author_id', userId);
+            post.comments[0].should.have.property('author');
+            post.comments[0].author.should.have.property('_id', userId);
+            post.comments[0].author.should.have.property('username', 'kebab94');
             post.comments[0].should.have.property('votes');
             post.comments[0].votes.should.have.property('hotness');
             post.comments[0].votes.hotness.should.be.greaterThan(0);
@@ -151,10 +153,14 @@ describe('/posts', function () {
             post.comments.should.be.an.Array;
             post.comments.should.have.length(2);
             post.comments[0].should.have.property('message', 'my first comment');
-            post.comments[0].should.have.property('author_id', userId);
+            post.comments[0].should.have.property('author');
+            post.comments[0].author.should.have.property('_id', userId);
+            post.comments[0].author.should.have.property('username', 'kebab94');
             post.comments[0].should.have.property('_id', '0');
             post.comments[1].should.have.property('message', 'my second comment');
-            post.comments[1].should.have.property('author_id', userId);
+            post.comments[1].should.have.property('author');
+            post.comments[1].author.should.have.property('_id', userId);
+            post.comments[1].author.should.have.property('username', 'kebab94');
             post.comments[1].should.have.property('_id', '1');
             done();
         });
@@ -227,10 +233,14 @@ describe('/posts', function () {
             post.comments.should.be.an.Array;
             post.comments.should.have.length(2);
             post.comments[0].should.have.property('message', 'my first comment');
-            post.comments[0].should.have.property('author_id', mouloudId);
+            post.comments[0].should.have.property('author');
+            post.comments[0].author.should.have.property('_id', mouloudId);
+            post.comments[0].author.should.have.property('username', 'kebab94');
             post.comments[0].should.have.property('_id', '0');
             post.comments[1].should.have.property('message', 'my first comment too');
-            post.comments[1].should.have.property('author_id', jeanKevinId);
+            post.comments[1].should.have.property('author');
+            post.comments[1].author.should.have.property('_id', jeanKevinId);
+            post.comments[1].author.should.have.property('username', 'jkdlb1999');
             post.comments[1].should.have.property('_id', '1');
             done();
         });
@@ -346,31 +356,41 @@ describe('/posts', function () {
             post.comments.should.have.length(1);
             post.comments[0].should.have.property('_id', '0');
             post.comments[0].should.have.property('message', 'depth 0');
-            post.comments[0].should.have.property('author_id', userId);
+            post.comments[0].should.have.property('author');
+            post.comments[0].author.should.have.property('_id', userId);
+            post.comments[0].author.should.have.property('username', 'kebab94');
 
             post.comments[0].replies.should.be.an.Array;
             post.comments[0].replies.should.have.length(1);
             post.comments[0].replies[0].should.have.property('_id', '0.0');
             post.comments[0].replies[0].should.have.property('message', 'depth 1');
-            post.comments[0].replies[0].should.have.property('author_id', userId);
+            post.comments[0].replies[0].should.have.property('author');
+            post.comments[0].replies[0].author.should.have.property('_id', userId);
+            post.comments[0].replies[0].author.should.have.property('username', 'kebab94');
 
             post.comments[0].replies[0].replies.should.be.an.Array;
             post.comments[0].replies[0].replies.should.have.length(1);
             post.comments[0].replies[0].replies[0].should.have.property('message', 'depth 2');
             post.comments[0].replies[0].replies[0].should.have.property('_id', '0.0.0');
-            post.comments[0].replies[0].replies[0].should.have.property('author_id', userId);
+            post.comments[0].replies[0].replies[0].should.have.property('author');
+            post.comments[0].replies[0].replies[0].author.should.have.property('_id', userId);
+            post.comments[0].replies[0].replies[0].author.should.have.property('username', 'kebab94');
 
             post.comments[0].replies[0].replies[0].replies.should.be.an.Array;
             post.comments[0].replies[0].replies[0].replies.should.have.length(1);
             post.comments[0].replies[0].replies[0].replies[0].should.have.property('message', 'depth 3');
             post.comments[0].replies[0].replies[0].replies[0].should.have.property('_id', '0.0.0.0');
-            post.comments[0].replies[0].replies[0].replies[0].should.have.property('author_id', userId);
+            post.comments[0].replies[0].replies[0].replies[0].should.have.property('author');
+            post.comments[0].replies[0].replies[0].replies[0].author.should.have.property('_id', userId);
+            post.comments[0].replies[0].replies[0].replies[0].author.should.have.property('username', 'kebab94');
 
             post.comments[0].replies[0].replies[0].replies[0].replies.should.be.an.Array;
             post.comments[0].replies[0].replies[0].replies[0].replies.should.have.length(1);
             post.comments[0].replies[0].replies[0].replies[0].replies[0].should.have.property('message', 'depth 4');
             post.comments[0].replies[0].replies[0].replies[0].replies[0].should.have.property('_id', '0.0.0.0.0');
-            post.comments[0].replies[0].replies[0].replies[0].replies[0].should.have.property('author_id', userId);
+            post.comments[0].replies[0].replies[0].replies[0].replies[0].should.have.property('author');
+            post.comments[0].replies[0].replies[0].replies[0].replies[0].author.should.have.property('_id', userId);
+            post.comments[0].replies[0].replies[0].replies[0].replies[0].author.should.have.property('username', 'kebab94');
             done();
         });
     });
@@ -487,35 +507,49 @@ describe('/posts', function () {
             should.not.exist(err);
             should.exist(post);
             post.should.have.property('comments');
+
+            //kebab94
             post.comments.should.be.an.Array;
             post.comments.should.have.length(1);
             post.comments[0].should.have.property('_id', '0');
             post.comments[0].should.have.property('message', 'depth 0');
-            post.comments[0].should.have.property('author_id', mouloudId);
+            post.comments[0].should.have.property('author');
+            post.comments[0].author.should.have.property('_id', mouloudId);
+            post.comments[0].author.should.have.property('username', 'kebab94');
 
+            //jkdlb1999
             post.comments[0].replies.should.be.an.Array;
             post.comments[0].replies.should.have.length(1);
             post.comments[0].replies[0].should.have.property('_id', '0.0');
             post.comments[0].replies[0].should.have.property('message', 'depth 1');
-            post.comments[0].replies[0].should.have.property('author_id', jeanKevinId);
+            post.comments[0].replies[0].should.have.property('author');
+            post.comments[0].replies[0].author.should.have.property('_id', jeanKevinId);
+            post.comments[0].replies[0].author.should.have.property('username', 'jkdlb1999');
 
             post.comments[0].replies[0].replies.should.be.an.Array;
             post.comments[0].replies[0].replies.should.have.length(1);
             post.comments[0].replies[0].replies[0].should.have.property('_id', '0.0.0');
             post.comments[0].replies[0].replies[0].should.have.property('message', 'depth 2');
-            post.comments[0].replies[0].replies[0].should.have.property('author_id', mouloudId);
+            post.comments[0].replies[0].replies[0].should.have.property('author');
+            post.comments[0].replies[0].replies[0].author.should.have.property('_id', mouloudId);
+            post.comments[0].replies[0].replies[0].author.should.have.property('username', 'kebab94');
 
+            //jkdlb1999
             post.comments[0].replies[0].replies[0].replies.should.be.an.Array;
             post.comments[0].replies[0].replies[0].replies.should.have.length(1);
             post.comments[0].replies[0].replies[0].replies[0].should.have.property('_id', '0.0.0.0');
             post.comments[0].replies[0].replies[0].replies[0].should.have.property('message', 'depth 3');
-            post.comments[0].replies[0].replies[0].replies[0].should.have.property('author_id', jeanKevinId);
+            post.comments[0].replies[0].replies[0].replies[0].should.have.property('author');
+            post.comments[0].replies[0].replies[0].replies[0].author.should.have.property('_id', jeanKevinId);
+            post.comments[0].replies[0].replies[0].replies[0].author.should.have.property('username', 'jkdlb1999');
 
             post.comments[0].replies[0].replies[0].replies[0].replies.should.be.an.Array;
             post.comments[0].replies[0].replies[0].replies[0].replies.should.have.length(1);
             post.comments[0].replies[0].replies[0].replies[0].replies[0].should.have.property('_id', '0.0.0.0.0');
             post.comments[0].replies[0].replies[0].replies[0].replies[0].should.have.property('message', 'depth 4');
-            post.comments[0].replies[0].replies[0].replies[0].replies[0].should.have.property('author_id', mouloudId);
+            post.comments[0].replies[0].replies[0].replies[0].replies[0].should.have.property('author');
+            post.comments[0].replies[0].replies[0].replies[0].replies[0].author.should.have.property('_id', mouloudId);
+            post.comments[0].replies[0].replies[0].replies[0].replies[0].author.should.have.property('username', 'kebab94');
             done();
         });
     });
