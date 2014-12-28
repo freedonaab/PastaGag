@@ -66,6 +66,7 @@ module.exports = function (router) {
                         _id: user._id,
                         username: user.username
                     },
+                    status: 'ok',
                     message: message,
                     votes: {
                         hotness: 0,
@@ -208,6 +209,7 @@ module.exports = function (router) {
                         _id: user._id,
                         username: user.username
                     },
+                    status: 'ok',
                     message: message,
                     votes: {
                         hotness: 0,
@@ -252,29 +254,77 @@ module.exports = function (router) {
 
     });
 
-    //router.get('/:post_id/comments/test_depth_0', function (req, res) {
-    //
-    //    //0.0.0
-    //    PostsModel.findOne({
-    //        //'comments.0.message': 'depth 0'
-    //        //'comments.0.replies.0.message': 'depth 1'
-    //        //'comments.0.replies.0.replies.0.message': 'depth 3'
-    //
-    //        //'comments.0': {
-    //        //    $exists: true
-    //        //}
-    //
-    //        //'comments.0.replies.0': {
-    //        //    $exists: true
-    //        //}
-    //
-    //        'comments.0.replies.0.replies.0': {
-    //            $exists: true
-    //        }
-    //
-    //    }, function (err, _) {
-    //        res.send(_.toObject());
-    //    });
-    //
-    //});
+    router.delete('/:post_id/comments/:comment_id', function (req, res) {
+        //TODO: get author_id from session instead of user datas
+        var user_id = req.body.data.user_id;
+
+        var post_id = req.params.post_id;
+        var comment_id = req.params.comment_id;
+
+        var fields = ['_id', 'comments'];
+
+        var user = null;
+        async.waterfall([
+            function (next) {
+                //TODO optimize this query and only select _id and username
+                UsersModel.findById(user_id, function (err, doc) {
+                    //console.log('after UsersModel.findById', arguments);
+                    if (err) {
+                        next(utils.json.ServerError('error occured in mongodb : '+err));
+                    } else if (!doc) {
+                        next(utils.json.NotFound(user_id, 'User'));
+                    } else {
+                        next(null, doc);
+                    }
+                });
+            },
+            function (_user, next) {
+                user = _user;
+                //first get the post we want to comment
+                var depthString = commentIdToDepthString(comment_id);
+                var searchParams = {
+                    _id: post_id
+                };
+                searchParams[depthString] = { $exists: true };
+                PostsModel.findOne(searchParams, fields.join(' '),
+                    function (err, post) {
+                        if (err) {
+                            next(utils.json.ServerError('err occurred in mongodb: '+err));
+                        } else if (!post) {
+                            next(utils.json.NotFound(comment_id, 'Comment'));
+                        } else {
+                            next(null, post);
+                        }
+                    });
+            },
+            function (post, next) {
+                var parent_comment = commentIdToObject(post, comment_id);
+
+                if (parent_comment.author._id.toString() !== user_id) {
+                    return next(utils.json.BadRequest('User @'+user_id+' is not the author of this post'));
+                }
+
+                parent_comment.status = 'deleted';
+                parent_comment.message = '';
+                post.markModified(commentIdToDepthString(comment_id)+'.status');
+                post.markModified(commentIdToDepthString(comment_id)+'.message');
+                post.save(function(err) {
+                    if (err) {
+                        next(utils.json.ServerError('error in mongodb:'+err));
+                    } else {
+                        next(null);
+                    }
+                });
+            }
+
+        ], function (err, _) {
+            if (err) {
+                utils.respondJSON(res, err);
+            } else {
+                utils.respondJSON(res, utils.json.Ok());
+            }
+        });
+
+    });
+
 };

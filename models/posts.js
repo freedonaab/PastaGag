@@ -10,6 +10,7 @@ connection = mongoose;
 
 var CommentSchema = new mongoose.Schema({
     _id: String,
+    status: String,
     author: {
         _id: ObjectId,
         username: String

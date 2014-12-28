@@ -591,9 +591,15 @@ describe('/posts', function () {
                 res.body.data.comment.should.have.property('message', 'my first comment');
                 res.body.data.comment.should.have.property('status', 'ok');
                 res.body.data.comment.should.have.property('_id', '0');
-                testUtils.delete(config, '/posts/'+post._id+'/comments/0', { url_params: { user_id: userId } })(next);
+                testUtils.delete(config, '/posts/'+post._id+'/comments/0', { user_id: userId })(next);
             },
-            function (_, next) {
+            function (res, next) {
+                res.should.have.property('body');
+                res.body.should.have.property('metadata');
+                res.body.should.have.property('data');
+                res.body.metadata.should.have.property('success', true);
+                res.body.metadata.should.have.property('error', null);
+                res.body.metadata.should.have.property('statusCode', 200);
                 testUtils.getPostWithErrorChecking(config, post._id)(next);
             }
 
@@ -619,7 +625,7 @@ describe('/posts', function () {
         var userId = null;
         var baboushkaId = null;
         async.waterfall([
-            testUtils.createUsers(config, {
+            testUtils.createUsers(config, [{
                 email: "mouloud1@hotmail.fr",
                 username: "kebab94",
                 password: "wallah123"
@@ -627,7 +633,7 @@ describe('/posts', function () {
                 email: "baboushka.poliakov@yandex.ru",
                 username: "baboushka1991",
                 password: "leninstalingorbatchev"
-            }),
+            }]),
             function (userIds, next) {
                 userId = userIds[0];
                 baboushkaId = userIds[1];
@@ -656,7 +662,7 @@ describe('/posts', function () {
                 res.body.data.comment.should.have.property('message', 'my first comment');
                 res.body.data.comment.should.have.property('status', 'ok');
                 res.body.data.comment.should.have.property('_id', '0');
-                testUtils.delete(config, '/posts/'+post._id+'/comments/0', { url_params: { user_id: baboushkaId } })(next);
+                testUtils.delete(config, '/posts/'+post._id+'/comments/0',  { user_id: baboushkaId })(next);
             },
             function (res, next) {
                 should.exist(res);
