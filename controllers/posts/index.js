@@ -11,6 +11,7 @@ var PostsModel = require('../../models/posts');
 var UsersModel = require('../../models/users');
 
 var votesRouter = require('./votes');
+var commentsRouter = require('./comments');
 
 
 module.exports = function (router) {
@@ -346,6 +347,7 @@ module.exports = function (router) {
 
 
     votesRouter(router);
+    commentsRouter(router);
 
 
 };
