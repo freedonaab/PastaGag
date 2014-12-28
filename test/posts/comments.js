@@ -71,6 +71,7 @@ describe('/posts', function () {
             post.should.have.property('comments');
             post.comments.should.be.an.Array;
             post.comments.should.have.length(1);
+            post.comments[0].should.have.property('status', 'ok');
             post.comments[0].should.have.property('_id', '0');
             post.comments[0].should.have.property('message', 'my first comment');
             post.comments[0].should.have.property('author');
@@ -553,5 +554,135 @@ describe('/posts', function () {
             done();
         });
     });
+
+    it('User should be able to delete a comment he made on a post', function (done) {
+        var post = null;
+        var userId = null;
+        async.waterfall([
+            testUtils.createUser(config, {
+                email: "mouloud1@hotmail.fr",
+                username: "kebab94",
+                password: "wallah123"
+            }),
+            function (res, next) {
+                userId = res.body.data.user._id;
+                testUtils.createPostWithErrorChecking(config, {
+                    title: "Watch this adorable little puppy die in fire",
+                    content: "http://127.0.0.1:8080/fake/images/success/123456.jpg",
+                    author_id: userId
+                })(next);
+            },
+            function (_post, next) {
+                post = _post;
+                testUtils.postWithErrorChecking(config, '/posts/'+post._id+'/comments', {
+                    author_id: userId,
+                    message: 'my first comment'
+                })(next);
+            },
+            function (res, next) {
+                should.exist(res);
+                res.should.have.property('body');
+                res.body.should.have.property('metadata');
+                res.body.should.have.property('data');
+                res.body.metadata.should.have.property('success', true);
+                res.body.metadata.should.have.property('error', null);
+                res.body.metadata.should.have.property('statusCode', 200);
+                res.body.data.should.have.property('comment');
+                res.body.data.comment.should.have.property('message', 'my first comment');
+                res.body.data.comment.should.have.property('status', 'ok');
+                res.body.data.comment.should.have.property('_id', '0');
+                testUtils.delete(config, '/posts/'+post._id+'/comments/0', { url_params: { user_id: userId } })(next);
+            },
+            function (_, next) {
+                testUtils.getPostWithErrorChecking(config, post._id)(next);
+            }
+
+
+        ], function (err, post) {
+            should.not.exist(err);
+            should.exist(post);
+            post.should.have.property('comments');
+            post.comments.should.be.an.Array;
+            post.comments.should.have.length(1);
+            post.comments[0].should.have.property('status', 'deleted');
+            post.comments[0].should.have.property('_id', '0');
+            post.comments[0].should.have.property('message', '');
+            post.comments[0].should.have.property('author');
+            post.comments[0].author.should.have.property('_id', userId);
+            post.comments[0].author.should.have.property('username', 'kebab94');
+            done();
+        });
+    });
+
+    it('An user shouldnt be able to delete a comment that an another user made', function (done) {
+        var post = null;
+        var userId = null;
+        var baboushkaId = null;
+        async.waterfall([
+            testUtils.createUsers(config, {
+                email: "mouloud1@hotmail.fr",
+                username: "kebab94",
+                password: "wallah123"
+            },{
+                email: "baboushka.poliakov@yandex.ru",
+                username: "baboushka1991",
+                password: "leninstalingorbatchev"
+            }),
+            function (userIds, next) {
+                userId = userIds[0];
+                baboushkaId = userIds[1];
+                testUtils.createPostWithErrorChecking(config, {
+                    title: "Watch this adorable little puppy die in fire",
+                    content: "http://127.0.0.1:8080/fake/images/success/123456.jpg",
+                    author_id: userId
+                })(next);
+            },
+            function (_post, next) {
+                post = _post;
+                testUtils.postWithErrorChecking(config, '/posts/'+post._id+'/comments', {
+                    author_id: userId,
+                    message: 'my first comment'
+                })(next);
+            },
+            function (res, next) {
+                should.exist(res);
+                res.should.have.property('body');
+                res.body.should.have.property('metadata');
+                res.body.should.have.property('data');
+                res.body.metadata.should.have.property('success', true);
+                res.body.metadata.should.have.property('error', null);
+                res.body.metadata.should.have.property('statusCode', 200);
+                res.body.data.should.have.property('comment');
+                res.body.data.comment.should.have.property('message', 'my first comment');
+                res.body.data.comment.should.have.property('status', 'ok');
+                res.body.data.comment.should.have.property('_id', '0');
+                testUtils.delete(config, '/posts/'+post._id+'/comments/0', { url_params: { user_id: baboushkaId } })(next);
+            },
+            function (res, next) {
+                should.exist(res);
+                res.should.have.property('body');
+                res.body.should.have.property('metadata');
+                res.body.should.have.property('data');
+                res.body.metadata.should.have.property('success', false);
+                res.body.metadata.should.have.property('error');
+                res.body.metadata.should.have.property('statusCode', 400);
+                testUtils.getPostWithErrorChecking(config, post._id)(next);
+            }
+        ], function (err, post) {
+            should.not.exist(err);
+            should.exist(post);
+            post.should.have.property('comments');
+            post.comments.should.be.an.Array;
+            post.comments.should.have.length(1);
+            post.comments[0].should.have.property('status', 'ok');
+            post.comments[0].should.have.property('_id', '0');
+            post.comments[0].should.have.property('message', 'my first comment');
+            post.comments[0].should.have.property('author');
+            post.comments[0].author.should.have.property('_id', userId);
+            post.comments[0].author.should.have.property('username', 'kebab94');
+            done();
+        });
+    });
+
 
 });
