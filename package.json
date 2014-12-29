@@ -18,7 +18,7 @@
     "kraken-js": "^1.0.1",
     "localizr": "^0.1.0",
     "moment": "^2.8.4",
-    "mongoose": "^3.8.21",
+    "mongoose": "3.8.21",
     "node-sass": "^0.8.4",
     "passport": "^0.2.1",
     "request": "^2.51.0",
