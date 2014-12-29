@@ -1,4 +1,4 @@
-'use strict';
+app'use strict';
 
 
 module.exports = function IndexModel() {
