@@ -1,0 +1,8 @@
+{>"layouts/master" /}
+
+{<navbar}
+<tabset type="pills">
+    <tab heading="Post"></tab>
+    <tab heading="Vertical 2"></tab>
+</tabset>
+{/navbar}
