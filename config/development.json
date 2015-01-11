@@ -51,6 +51,10 @@
                             "base": "templates",
                             "i18n": "config:i18n"
                         },
+			"browserify": {
+                            "module": "kraken-devtools-browserify",
+                            "files": "/js/**/*.js"
+			},
                         "css": {
                             "module": "kraken-devtools/plugins/sass",
                             "files": "/css/**/*.css"
