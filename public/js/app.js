@@ -2,12 +2,14 @@
 
 require('../components/angular');
 require('../components/angular-route');
+
 var pastagagControllers = require('./controllers');
 
 
 var pastagagApp = angular.module('pastagagApp', [
     'ngRoute',
-    'pastagagControllers'
+    'pastagagControllers',
+    'ui.bootstrap'
 ]);
 
 pastagagApp.config(['$routeProvider',
