@@ -1,4 +1,4 @@
- {
+{
   "name": "pastagag",
   "version": "0.1.0",
   "description": "A very funny website with a lot of original content",
@@ -17,7 +17,7 @@
     "kraken-devtools": "^1.0.0",
     "kraken-devtools-browserify": "0.0.1",
     "kraken-js": "^1.0.1",
-    "localizr": "^0.1.0",
+    "localizr": "~0.1.5",
     "moment": "^2.8.4",
     "mongoose": "3.8.21",
     "node-sass": "^0.8.4",

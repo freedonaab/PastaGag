@@ -23,6 +23,10 @@
             }
         }
     },
+    "i18n": {
+        "contentPath": "path:./locales",
+        "fallback": "en-US"
+    },
 
     "database": {
         "type": "mongodb",
@@ -51,7 +55,7 @@
                             "base": "templates",
                             "i18n": "config:i18n"
                         },
-                        
+
                         "css": {
                             "module": "kraken-devtools/plugins/sass",
                             "files": "/css/**/*.css"
