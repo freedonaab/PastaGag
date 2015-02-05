@@ -1,9 +1,9 @@
 var pastagagControllers = angular.module('pastagagControllers', []);
 //var pastagagServices = angular.module('pastagagServices', []);
 
-pastagagControllers.controller('PostListCtrl', ['$scope', 'postService',
-    function ($scope, postService) {
-    }]);
+pastagagControllers.controller('PostsListCtrl', ['$scope',
+						function ($scope) {
+						}]);
 
 //pastagagServices.service('postService', ['$scope', '$http',
 //    function ($scope, postService) {

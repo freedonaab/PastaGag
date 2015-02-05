@@ -9,8 +9,8 @@
 <div class="page">
     {>navbar/}
     <h1>{+pageHeader}Hello{/pageHeader}</h>
-        <div class="bodyContent">
-            {+bodyContent/}
+        <div class="content">
+            {+content/}
         </div>
         <div class="footer">
             {+pageFooter}

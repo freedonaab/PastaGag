@@ -6,7 +6,6 @@ require('../components/angular-bootstrap/ui-bootstrap');
 
 var pastagagControllers = require('./controllers');
 
-
 var pastagagApp = angular.module('pastagagApp', [
     'ngRoute',
     'pastagagControllers',
@@ -15,9 +14,16 @@ var pastagagApp = angular.module('pastagagApp', [
 
 pastagagApp.config(['$routeProvider',
     function($routeProvider) {
+
+        // $routeProvider.
+        //     when('/posts', {
+        //         templateUrl: 'layouts/posts.dust'
+        //     });
+
+
         $routeProvider.
             when('/posts', {
-                templateUrl: 'layouts/master.dust',
+                templateUrl: 'templates/angular/posts.dust',
                 controller: 'PostsListCtrl'
             }).
             when('/posts/:id', {
@@ -35,4 +41,5 @@ pastagagApp.config(['$routeProvider',
             otherwise({
                 redirectTo: '/'
             });
+
     }]);
