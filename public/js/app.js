@@ -2,6 +2,7 @@
 
 require('../components/angular');
 require('../components/angular-route');
+require('../components/angular-bootstrap/ui-bootstrap');
 
 var pastagagControllers = require('./controllers');
 
