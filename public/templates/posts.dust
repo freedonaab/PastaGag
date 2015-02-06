@@ -1,8 +1,6 @@
 {>"layouts/master" /}
 
 {<content}
-    <h1>{@pre type="content" key="greeting"/}</h1>
-    <p>{_csrf}</p>
 
     This is the posts view trololol
 
