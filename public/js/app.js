@@ -3,27 +3,23 @@
 require('../components/angular');
 require('../components/angular-route');
 require('../components/angular-bootstrap/ui-bootstrap');
+require('../components/angular-masonry/angular-masonry')
 
 var pastagagControllers = require('./controllers');
 
 var pastagagApp = angular.module('pastagagApp', [
     'ngRoute',
     'pastagagControllers',
-    'ui.bootstrap'
+    'ui.bootstrap',
+    'wu.masonry'
 ]);
 
 pastagagApp.config(['$routeProvider',
     function($routeProvider) {
 
-        // $routeProvider.
-        //     when('/posts', {
-        //         templateUrl: 'layouts/posts.dust'
-        //     });
-
-
         $routeProvider.
-            when('/posts', {
-                templateUrl: 'templates/angular/posts.dust',
+            when('/', {
+                templateUrl: 'templates/angular/index.dust',
                 controller: 'PostsListCtrl'
             }).
             when('/posts/:id', {
