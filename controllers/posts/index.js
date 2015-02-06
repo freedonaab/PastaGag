@@ -99,7 +99,7 @@ module.exports = function (router) {
                                     if (!user_id) {
                                         return next(null, null);
                                     }
-                                    //check if the user has downvoted this post1
+                                    //check if the user has downvoted this post
                                     var query = PostsModel.findOne({_id: post_id, 'votes.downs': user_id});
                                     query.select('_id');
                                     query.exec(next);
@@ -109,8 +109,9 @@ module.exports = function (router) {
                                 if (down_vote) {
                                     _global.votedDown = true;
                                 }
-                                _global.post.votes.user_voted_up = _global.votedUp;
-                                _global.post.votes.user_voted_down = _global.votedDown;
+                                // TODO Those variables are undefined
+//                                _global.post.votes.user_voted_up = _global.votedUp;
+//                                _global.post.votes.user_voted_down = _global.votedDown;
                                 next(null);
                             }
                         ], next);
