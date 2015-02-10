@@ -3,17 +3,17 @@
 require('../components/angular');
 require('../components/angular-route');
 require('../components/angular-bootstrap/ui-bootstrap');
+require('../components/angular-bootstrap/ui-bootstrap-tpls');
 require('../components/angular-resource');
+var _ = require("../components/lodash/lodash.js");
 
 var pastagagControllers = require('./controllers');
 var pastagagServices = require('./services');
-var pastagagDirectives = require('./directives');
 
 var pastagagApp = angular.module('pastagagApp', [
     'ngRoute',
     'pastagagControllers',
     'pastagagServices',
-    'pastagagDirectives',
     'ui.bootstrap'
 ]);
 
