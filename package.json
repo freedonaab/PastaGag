@@ -18,15 +18,16 @@
     "kraken-devtools-browserify": "0.0.1",
     "kraken-js": "^1.0.1",
     "localizr": "~0.1.5",
+    "lodash": "^3.1.0",
     "moment": "^2.8.4",
     "mongoose": "3.8.21",
     "node-sass": "^0.8.4",
     "passport": "^0.2.1",
+    "pow-mongodb-fixtures": "^0.10.0",
     "request": "^2.51.0",
     "should": "^4.4.1",
     "superagent": "^0.21.0",
-    "underscore": "^1.7.0",
-    "pow-mongodb-fixtures": "^0.10.0"
+    "underscore": "^1.7.0"
   },
   "devDependencies": {
     "browserify": "^3.46.1",

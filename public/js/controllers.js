@@ -2,6 +2,10 @@
 
 var pastagagControllers = angular.module('pastagagControllers', []);
 
+var _ = require("lodash");
+console.log('lodash !!');
+console.log(_);
+
 pastagagControllers.controller('navbarController', ['$scope', '$location',
     function ($scope, $location) {
         $scope.isActive = function (viewLocation) {
