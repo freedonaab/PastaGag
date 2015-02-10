@@ -7,11 +7,17 @@ pastagagServices.factory('Post', ['$resource',
         return $resource('posts/:param',
             {param: "@param"},
             {
-                get: {
+                list: {
                     method: 'GET',
                     params: {},
                     transformResponse: function (data) {return angular.fromJson(data).data.posts},
                     isArray: true
+                },
+                get: {
+                    method: 'GET',
+                    params: {},
+                    transformResponse: function (data) {return angular.fromJson(data).data.post},
+                    isArray: false
                 }
             });
     }]);

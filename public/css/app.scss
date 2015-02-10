@@ -1,7 +1,13 @@
 @import "../components/bootstrap-sass-official/assets/stylesheets/bootstrap";
+$fa-font-path: "../components/components-font-awesome/fonts";
+@import "../components/components-font-awesome/scss/font-awesome";
 
 body {
   padding-top: 50px;
+}
+
+.right {
+  float: right;
 }
 
 .navbar-nav {
@@ -10,7 +16,7 @@ body {
   }
 }
 
-.postsList {
+.postsList, .postList{
   .item {
     margin: 0 auto;
     width: 50%;
