@@ -2,12 +2,8 @@
 
 var pastagagControllers = angular.module('pastagagControllers', []);
 
-var _ = require("lodash");
-console.log('lodash !!');
-console.log(_);
-
-pastagagControllers.controller('navbarController', ['$scope', '$location',
-    function ($scope, $location) {
+pastagagControllers.controller('navbarController', ['$scope', '$location', '$modal',
+    function ($scope, $location, $modal) {
         $scope.isActive = function (viewLocation) {
             var path = $location.path().substr(0, 5);
             if (viewLocation === '/best' && path === '/best') {
@@ -16,9 +12,24 @@ pastagagControllers.controller('navbarController', ['$scope', '$location',
             return viewLocation === $location.path();
         };
 
-        $scope.showModal = false;
-        $scope.openUploadModal = function(){
-            $scope.showModal = !$scope.showModal;
+        $scope.openUploadModal = function (size) {
+
+            var modalInstance = $modal.open({
+                templateUrl: 'uploadModalContent',
+                controller: 'ModalInstanceController',
+                size: size,
+                resolve: {
+                    items: function () {
+                        return $scope.items;
+                    }
+                },
+                backdrop: true
+            });
+
+            modalInstance.result.then(function (selectedItem) {
+                $scope.selected = selectedItem;
+            }, function () {
+            });
         };
     }]);
 
@@ -50,5 +61,16 @@ pastagagControllers.controller('PostListCtrl', ['$scope', '$http', 'Post', '$rou
             }
         };
     }]);
+
+pastagagControllers.controller('ModalInstanceController', function ($scope, $modalInstance) {
+
+    $scope.ok = function () {
+        $modalInstance.close();
+    };
+
+    $scope.cancel = function () {
+        $modalInstance.dismiss('cancel');
+    };
+});
 
 module.exports = pastagagControllers;
