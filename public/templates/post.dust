@@ -17,10 +17,33 @@
         <hr>
         <form name="post-comment-form">
             <textarea ng-model="comment" id="comment" class="form-control" rows="3" placeholder="{@pre type="content" key="write_comment"/}." required=""></textarea>
-            <br>
             <button type="button" class="btn btn-primary right" ng-disabled="!comment">
-                <span class="fa fa-smile-o" aria-hidden="true" ng-click="postComment(post._id)"> {@pre type="content" key="post_comment"/}</span>
+                <span class="fa fa-comment" aria-hidden="true" ng-click="postComment(post._id)"> {@pre type="content" key="post_comment"/}</span>
             </button>
         </form>
+        <br/>
+        <div class="comment" ng-repeat="comment in post.comments">
+            <blockquote>
+                <p>{{ comment.message }}</p>
+                <footer>{{ comment.author.username }}</footer>
+                <ul class="list-inline">
+                    <li>
+                        <a type="button" ng-disabled="!comment">
+                            <span class="fa fa-comments-o" aria-hidden="true" ng-click="replyComment(comment._id)"></span>
+                        </a>
+                    </li>
+                    <li>
+                        <a type="button" ng-disabled="!comment">
+                            <span class="fa fa-arrow-up" aria-hidden="true" ng-click="upvoteComment(comment._id)"></span>
+                        </a>
+                    </li>
+                    <li>
+                        <a type="button" ng-disabled="!comment">
+                            <span class="fa fa-arrow-down" aria-hidden="true" ng-click="downvoteComment(comment._id)"></span>
+                        </a>
+                    </li>
+                </ul>
+            </blockquote>
+        </div>
     </div>
 </div>
