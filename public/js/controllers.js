@@ -15,12 +15,17 @@ pastagagControllers.controller('navbarController', ['$scope', '$location',
             }
             return viewLocation === $location.path();
         };
+
+        $scope.showModal = false;
+        $scope.openUploadModal = function(){
+            $scope.showModal = !$scope.showModal;
+        };
     }]);
 
 pastagagControllers.controller('PostsListCtrl', ['$scope', 'Post', '$location',
     function ($scope, Post, $location) {
         var path = $location.path().substr(1);
-        $scope.posts = Post.get({}, {param: path});
+        $scope.posts = Post.list({}, {param: path});
 
         $scope.upvote = function(postId) {
         };
@@ -28,9 +33,22 @@ pastagagControllers.controller('PostsListCtrl', ['$scope', 'Post', '$location',
         };
     }]);
 
-pastagagControllers.controller('PostListCtrl', ['$scope', 'Post', '$routeParams',
-    function ($scope, Post, $routeParams) {
+pastagagControllers.controller('PostListCtrl', ['$scope', '$http', 'Post', '$routeParams',
+    function ($scope, $http, Post, $routeParams) {
         $scope.post = Post.get({param: $routeParams.id});
+
+        $scope.upvote = function(postId) {
+        };
+        $scope.downvote = function(postId) {
+        };
+        $scope.postComment = function(postId) {
+            var comment = angular.element('#comment').val();
+            if (comment !== "") {
+                $http.post('posts/' + postId + '/comments', comment).success(function(data) {
+                    $scope.phones = data;
+                });
+            }
+        };
     }]);
 
 module.exports = pastagagControllers;

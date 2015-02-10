@@ -9,7 +9,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#">PastaGag</a>
+            <a class="navbar-brand" href="#/posts">PastaGag</a>
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
@@ -19,12 +19,12 @@
                 <li ng-class="{ active: isActive('/new')}"><a href="#/new"><i class="glyphicon glyphicon-time"></i> {@pre type="content" key="recent"/}</a></li>
 
                 <li ng-class="{ active: isActive('/best')}" class="dropdown" dropdown>
-                    <a href="#" class="dropdown-toggle" dropdown-toggle><i class="glyphicon glyphicon-star"></i> {@pre type="content" key="score"/}<b class="caret"></b></a>
+                    <a href="#" class="dropdown-toggle" dropdown-toggle><i class="glyphicon glyphicon-star"></i> {@pre type="content" key="score.by_score"/}<b class="caret"></b></a>
                     <ul class="dropdown-menu">
-                        <li ng-class="{ active: isActive('/best/ever')}"><a href="#/best/ever">{@pre type="content" key="all_time"/}</a></li>
-                        <li ng-class="{ active: isActive('/best/month')}"><a href="#/best/month">{@pre type="content" key="current_month"/}</a></li>
-                        <li ng-class="{ active: isActive('/best/week')}"><a href="#/best/week">{@pre type="content" key="current_week"/}</a></li>
-                        <li ng-class="{ active: isActive('/best/day')}"><a href="#/best/day">{@pre type="content" key="current_day"/}</a></li>
+                        <li ng-class="{ active: isActive('/best/ever')}"><a href="#/best/ever">{@pre type="content" key="score.all_time"/}</a></li>
+                        <li ng-class="{ active: isActive('/best/month')}"><a href="#/best/month">{@pre type="content" key="score.current_month"/}</a></li>
+                        <li ng-class="{ active: isActive('/best/week')}"><a href="#/best/week">{@pre type="content" key="score.current_week"/}</a></li>
+                        <li ng-class="{ active: isActive('/best/day')}"><a href="#/best/day">{@pre type="content" key="score.current_day"/}</a></li>
                     </ul>
                 </li>
             </ul>
@@ -38,9 +38,26 @@
                         </span>
                     </div>
                 </li>
-                <li><div>
-                    <button type="button" class="btn btn-warning" ng-click="disabled = !disabled">{@pre type="content" key="upload"/}</button>
-                </div></li>
+                <li>
+                    <div class="container">
+                        <button type="button" class="btn btn-warning" ng-click="openUploadModal()">{@pre type="content" key="upload"/}</button>
+
+                        <modal title="Upload a Post" visible="showModal">
+                            <form role="form">
+                                <div class="form-group">
+                                    <label for="new-post-text">Title</label>
+                                    <input type="text" class="form-control" id="new-post-text" placeholder="Enter a title" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="new-post-url">Content Url</label>
+                                    <input type="url" class="form-control" id="new-post-url" placeholder="Content URL" />
+                                </div>
+                                <button type="submit" class="btn btn-default">Send !</button>
+                                <button class="btn btn-warning">Nevermind...</button>
+                            </form>
+                        </modal>
+                    </div>
+                </li>
             </ul>
 
         </div><!-- /.navbar-collapse -->

@@ -7,11 +7,13 @@ require('../components/angular-resource');
 
 var pastagagControllers = require('./controllers');
 var pastagagServices = require('./services');
+var pastagagDirectives = require('./directives');
 
 var pastagagApp = angular.module('pastagagApp', [
     'ngRoute',
     'pastagagControllers',
     'pastagagServices',
+    'pastagagDirectives',
     'ui.bootstrap'
 ]);
 
@@ -20,39 +22,39 @@ pastagagApp.config(['$routeProvider',
 
         $routeProvider.
             when('/', {
-                templateUrl: 'templates/angular/posts.dust',
+                templateUrl: 'templates/posts.dust',
                 controller: 'PostsListCtrl'
             }).
             when('/hot', {
-                templateUrl: 'templates/angular/posts.dust',
+                templateUrl: 'templates/posts.dust',
                 controller: 'PostsListCtrl'
             }).
             when('/new', {
-                templateUrl: 'templates/angular/posts.dust',
+                templateUrl: 'templates/posts.dust',
                 controller: 'PostsListCtrl'
             }).
             when('/best', {
-                templateUrl: 'templates/angular/posts.dust',
+                templateUrl: 'templates/posts.dust',
                 controller: 'PostsListCtrl'
             }).
             when('/best/ever', {
-                templateUrl: 'templates/angular/posts.dust',
+                templateUrl: 'templates/posts.dust',
                 controller: 'PostsListCtrl'
             }).
             when('/best/month', {
-                templateUrl: 'templates/angular/posts.dust',
+                templateUrl: 'templates/posts.dust',
                 controller: 'PostsListCtrl'
             }).
             when('/best/week', {
-                templateUrl: 'templates/angular/posts.dust',
+                templateUrl: 'templates/posts.dust',
                 controller: 'PostsListCtrl'
             }).
             when('/best/day', {
-                templateUrl: 'templates/angular/posts.dust',
+                templateUrl: 'templates/posts.dust',
                 controller: 'PostsListCtrl'
             }).
             when('/posts/:id', {
-                templateUrl: 'templates/angular/post.dust',
+                templateUrl: 'templates/post.dust',
                 controller: 'PostListCtrl'
             }).
             when('/account', {

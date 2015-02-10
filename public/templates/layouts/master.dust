@@ -21,6 +21,7 @@
             {/pageFooter}
         </div>
 </div>
+<script src="/components/jquery/dist/jquery.js"></script>
 <script src="/js/app.js"></script>
 </body>
 </html>
