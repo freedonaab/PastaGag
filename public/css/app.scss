@@ -1,44 +1,51 @@
 @import "../components/bootstrap-sass-official/assets/stylesheets/bootstrap";
 
-/* items are not quite 1/3 wide */
-.item {
-  width: 33.2%;
-  float: left;
+body {
+  padding-top: 50px;
 }
 
-/* images cover up the gap */
-.item img {
-  display: block;
-  width: 100.5%;
+.navbar-nav {
+  button {
+    margin-left: 10px;
+  }
 }
 
-/**** Transitions for Masonry ****/
-
-.masonry,
-.masonry .masonry-brick {
-  -webkit-transition-duration: 0.4s;
-  -moz-transition-duration: 0.4s;
-  -ms-transition-duration: 0.4s;
-  -o-transition-duration: 0.4s;
-  transition-duration: 0.4s;
-}
-
-.masonry {
-  -webkit-transition-property: height, width;
-  -moz-transition-property: height, width;
-  -ms-transition-property: height, width;
-  -o-transition-property: height, width;
-  transition-property: height, width;
-}
-
-.masonry .masonry-brick {
-  -webkit-transition-property: left, right, top;
-  -moz-transition-property: left, right, top;
-  -ms-transition-property: left, right, top;
-  -o-transition-property: left, right, top;
-  transition-property: left, right, top;
+.postsList {
+  .item {
+    margin: 0 auto;
+    width: 50%;
+    img {
+      width: 100%;
+      margin-bottom: 5px;
+    }
+    .btn-lg {
+      font-size: 1.5em;
+    }
+  }
 }
 
 .footer {
   clear: both;
+}
+
+@media (min-width: 765px) {
+  .navbar {
+    .container {
+      width: 100%;
+    }
+  }
+}
+@media (min-width: 992px) {
+  .navbar {
+    .container {
+      width: 970px;
+    }
+  }
+}
+@media (min-width: 1200px) {
+  .navbar {
+    .container {
+      width: 1170px;
+    }
+  }
 }
