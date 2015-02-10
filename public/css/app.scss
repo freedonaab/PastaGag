@@ -40,6 +40,13 @@ body {
   }
 }
 
+.postList {
+  .comment {
+    overflow: auto;
+    width: 100%;
+  }
+}
+
 .footer {
   clear: both;
 }

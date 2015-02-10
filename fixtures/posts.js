@@ -5,7 +5,23 @@ exports.posts = [
         author: {
             _id: '54d4c9c11771a63013614f75',
             username: 'Angelina'
-        }
+        },
+        comments: [
+            {
+                author: {
+                    _id: '54d4c9c11771a63013614f75',
+                    username: 'Angelina'
+                },
+                message: 'Hahahaha'
+            },
+            {
+                author: {
+                    _id: '54d4c9c11771a63013614f75',
+                    username: 'Angelina'
+                },
+                message: 'Mdrrrrr'
+            }
+        ]
     },
     {
         title: 'Super marrant !',
@@ -13,7 +29,16 @@ exports.posts = [
         author: {
             _id: '54d4c9c11771a63013614f75',
             username: 'Angelina'
-        }
+        },
+        comments: [
+            {
+                author: {
+                    _id: '54d4c9c11771a63013614f75',
+                    username: 'Angelina'
+                },
+                message: 'Mouais'
+            }
+        ]
     },
     {
         title: 'MDRRRRR !',

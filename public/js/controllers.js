@@ -36,7 +36,7 @@ pastagagControllers.controller('navbarController', ['$scope', '$location', '$mod
 pastagagControllers.controller('PostsListCtrl', ['$scope', 'Post', '$location',
     function ($scope, Post, $location) {
         var path = $location.path().substr(1);
-        $scope.posts = Post.list({}, {param: path});
+        pos$scope.posts = Post.list({}, {param: path});
 
         $scope.upvote = function(postId) {
         };
@@ -55,7 +55,12 @@ pastagagControllers.controller('PostListCtrl', ['$scope', '$http', 'Post', '$rou
         $scope.postComment = function(postId) {
             var comment = angular.element('#comment').val();
             if (comment !== "") {
-                $http.post('posts/' + postId + '/comments', comment).success(function(data) {
+                $http.post('posts/' + postId + '/comments',
+                    {
+                        message: comment
+                    }
+                )
+                    .success(function(data) {
                     $scope.phones = data;
                 });
             }
