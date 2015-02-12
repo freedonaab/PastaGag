@@ -26,8 +26,9 @@ pastagagControllers.controller('navbarController', ['$scope', '$location', '$mod
                 backdrop: true
             });
 
-            modalInstance.result.then(function (selectedItem) {
-                $scope.selected = selectedItem;
+            modalInstance.result.then(function (modalScope) {
+                console.log(modalScope);
+                Auth.createPost(modalScope.post);
             }, function () {
             });
         };
@@ -91,16 +92,17 @@ pastagagControllers.controller('PostListCtrl', ['$scope', '$http', 'Post', '$rou
         };
     }]);
 
-pastagagControllers.controller('ModalInstanceController', function ($scope, $modalInstance) {
+pastagagControllers.controller('ModalInstanceController', function ($scope, $modalInstance, $http) {
 
     $scope.username = "";
     $scope.password = "";
 
     $scope.ok = function () {
         $modalInstance.close($scope);
+
     };
 
-    $scope.cancel = function () {
+    $scope.dismiss = function () {
         $modalInstance.dismiss('cancel');
     };
 });

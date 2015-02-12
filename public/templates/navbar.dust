@@ -45,20 +45,30 @@
                             <div class="modal-header">
                                 <h3 class="modal-title">Upload a new Post</h3>
                             </div>
-                            <div class="modal-body">
-                                <div class="form-group">
-                                    <label for="new-post-text">Title</label>
-                                    <input type="text" class="form-control" id="new-post-text" placeholder="Enter a title" />
+                            <form name="newPostForm" novalidate="">
+                                <div class="modal-body">
+                                    <div class="form-group" ng-class="{true: 'has-error'}[newPostForm.$submitted && newPostForm.pTitle.$error.required]">
+                                        <label class="control-label" for="new-post-title">Title</label>
+                                        <div class="controls">
+                                            <input type="text" class="form-control" id="new-post-title" name="pTitle" ng-model="post.title" placeholder="Enter a title" required/>
+                                            <span class="help-block" ng-show="newPostForm.$submitted && newPostForm.pTitle.$error.required">A title is required :(</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group" ng-class="{true: 'has-error'}[newPostForm.$submitted && newPostForm.pContent.$error.required || newPostForm.$submitted && newPostForm.pContent.$error.url]">
+                                        <label class="control-label" for="new-post-url">Content Url</label>
+                                        <div class="controls">
+                                            <input type="text" class="form-control" id="new-post-url" name="pContent" ng-model="post.content" placeholder="Content URL" required/>
+                                            <span class="help-block" ng-show="newPostForm.$submitted && newPostForm.pContent.$error.required">A URL content is required :(</span>
+                                            <span class="help-block" ng-show="newPostForm.$submitted && newPostForm.pContent.$error.url">Invalid URL :(</span>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="form-group">
-                                    <label for="new-post-url">Content Url</label>
-                                    <input type="url" class="form-control" id="new-post-url" placeholder="Content URL" />
+                                <div class="modal-footer">
+                                    <button class="btn btn-primary" ng-click="ok()">OK</button>
+                                    <button class="btn btn-warning" ng-click="dismiss()">Cancel</button>
                                 </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button class="btn btn-primary" ng-click="ok()">OK</button>
-                                <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
-                            </div>
+                            </form>
                         </script>
                     </div>
                 </li>
@@ -87,7 +97,6 @@
                     </div>
                 </li>
             </ul>
-
         </div><!-- /.navbar-collapse -->
     </div><!-- /.container-fluid -->
 </nav>

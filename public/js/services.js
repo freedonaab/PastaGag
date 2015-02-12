@@ -20,7 +20,7 @@ pastagagServices.factory('Post', ['$resource',
                     isArray: false
                 }
             });
-    }]);
+}]);
 
 
 pastagagServices.factory('Auth', [ '$http', '$location', '$window',
@@ -42,6 +42,37 @@ pastagagServices.factory('Auth', [ '$http', '$location', '$window',
                 .error(function() {
                     console.log('login: ERROR');
                 });
+        };
+
+        AuthService.createPost = function (post) {
+            //TODO:
+            //if (!AuthService.isLoggedIn())
+            //    return;
+
+            $http.post('/posts', {
+                data: { post: post },
+                _csrf: csrf_token
+            })
+                .success(function() {
+                    console.log('createPost: SUCCESS');
+                    //$window.location.reload();
+                })
+                .error(function() {
+                    console.log('createPost: ERROR');
+                });
+
+
+//     $scope.save = function (post) {
+//        if ($scope.newPostForm.$valid) {
+//            post.author_id = "54d4c9c11771a63013614f76";
+//            $http.post('posts/', { post: post })
+//                .success(function() {
+//                    $modalInstance.close();
+//                });
+//        }
+
+
+            return AuthService.user != null;
         };
 
         return AuthService;
