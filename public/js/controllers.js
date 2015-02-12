@@ -12,28 +12,29 @@ pastagagControllers.controller('navbarController', ['$scope', '$location', '$mod
             return viewLocation === $location.path();
         };
 
-	$scope.user = {
-	    csrf_token : csrf_token,
-	    isAuthenticated : isAuthenticated,
-	    username : username,
-	    password : password,
-	    email : email
-	};
 
-	$scope.logout = function () {
-	    Auth.logout();
-	};
+        $scope.user = {
+            csrf_token : csrf_token,
+            isAuthenticated : isAuthenticated,
+            username : username,
+            password : password,
+            email : email
+        };
+
+        $scope.logout = function () {
+            Auth.logout();
+        };
 
 
-	$scope.signup = function () {
-	    $location.path('#/signup');
-	};
+        $scope.signup = function () {
+            $location.path('#/signup');
+        };
 
         $scope.openUploadModal = function (size) {
 
             var modalInstance = $modal.open({
-                templateUrl: 'uploadModalContent',
-                controller: 'ModalInstanceController',
+                templateUrl: (isAuthenticated ? 'UploadModalTemplate' : 'LoginModalTemplate'),
+                controller: (isAuthenticated ? 'UploadModalController' : 'LoginModalController'),
                 size: size,
                 resolve: {
                     items: function () {
@@ -41,20 +42,14 @@ pastagagControllers.controller('navbarController', ['$scope', '$location', '$mod
                     }
                 },
                 backdrop: true
-            });
-
-            modalInstance.result.then(function (modalScope) {
-                console.log(modalScope);
-                Auth.createPost(modalScope.post);
-            }, function () {
             });
         };
 
         $scope.openLoginModal = function (size) {
 
             var modalInstance = $modal.open({
-                templateUrl: 'loginModalContent',
-                controller: 'ModalInstanceController',
+                templateUrl: 'LoginModalTemplate',
+                controller: 'LoginModalController',
                 size: size,
                 resolve: {
                     items: function () {
@@ -62,14 +57,6 @@ pastagagControllers.controller('navbarController', ['$scope', '$location', '$mod
                     }
                 },
                 backdrop: true
-            });
-
-            modalInstance.result.then(function (modalScope) {
-                console.log(modalScope);
-                console.log(modalScope.username);
-                console.log(modalScope.password);
-                Auth.login(modalScope.username, modalScope.password);
-            }, function () {
             });
         };
 
@@ -77,8 +64,8 @@ pastagagControllers.controller('navbarController', ['$scope', '$location', '$mod
 
 pastagagControllers.controller('AccountCtrl', ['$scope', 'Post', '$location', function ($scope, Post, $location) {
 
-    
-    
+
+
     // var path = $location.path().substr(1);
     // $scope.posts = Post.list({}, {param: path});
 
@@ -88,25 +75,28 @@ pastagagControllers.controller('AccountCtrl', ['$scope', 'Post', '$location', fu
     // };
 }]);
 
-
 pastagagControllers.controller('PostsListCtrl', ['$scope', 'Post', '$location',
     function ($scope, Post, $location) {
         var path = $location.path().substr(1);
         $scope.posts = Post.list({}, {param: path});
 
         $scope.upvote = function(postId) {
+            Auth.upvotePost(postId);
         };
         $scope.downvote = function(postId) {
+            Auth.downvotePost(postId);
         };
     }]);
 
-pastagagControllers.controller('PostListCtrl', ['$scope', '$http', 'Post', '$routeParams',
-    function ($scope, $http, Post, $routeParams) {
+pastagagControllers.controller('PostListCtrl', ['$scope', '$http', 'Post', '$routeParams', 'Auth',
+    function ($scope, $http, Post, $routeParams, Auth) {
         $scope.post = Post.get({param: $routeParams.id});
 
         $scope.upvote = function(postId) {
+            Auth.upvotePost(postId);
         };
         $scope.downvote = function(postId) {
+            Auth.downvotePost(postId);
         };
         $scope.postComment = function(postId) {
             var comment = angular.element('#comment').val();
@@ -117,20 +107,31 @@ pastagagControllers.controller('PostListCtrl', ['$scope', '$http', 'Post', '$rou
                     }
                 )
                     .success(function(data) {
-                    $scope.phones = data;
-                });
+                        $scope.phones = data;
+                    });
             }
         };
     }]);
 
-pastagagControllers.controller('ModalInstanceController', function ($scope, $modalInstance, $http) {
+pastagagControllers.controller('UploadModalController', function ($scope, $modalInstance, Auth) {
+    $scope.ok = function(post) {
+        if ($scope.newPostForm.$valid) {
+            Auth.createPost(post);
+            $modalInstance.close();
+        }
+    };
 
-    $scope.username = "";
-    $scope.password = "";
+    $scope.dismiss = function () {
+        $modalInstance.dismiss('cancel');
+    };
+});
 
-    $scope.ok = function () {
-        $modalInstance.close($scope);
-
+pastagagControllers.controller('LoginModalController', function ($scope, $modalInstance, Auth) {
+    $scope.ok = function(user) {
+        if ($scope.loginForm.$valid) {
+            Auth.login(user.username, user.password);
+            $modalInstance.close();
+        }
     };
 
     $scope.dismiss = function () {

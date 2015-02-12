@@ -81,16 +81,8 @@
                 </li>
                 <li>
                     <div>
-
-
                         <button ng-show="!user.isAuthenticated" type="button" class="btn btn-warning" ng-click="openLoginModal()">{@pre type="content" key="login"/}</button>
-
                         <button ng-show="!user.isAuthenticated" type="button" class="btn btn-warning" ng-click="signup()">{@pre type="content" key="signup"/}</button>
-
-			
-
-
-
                         <button ng-show="user.isAuthenticated" type="button" class="btn btn-warning" ng-click="logout()">   {@pre type="content" key="logout"/}</button>
                         <script type="text/ng-template" id="loginModalContent">
                             <div class="modal-header">
