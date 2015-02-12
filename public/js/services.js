@@ -44,6 +44,17 @@ pastagagServices.factory('Auth', [ '$http', '$location', '$window',
                 });
         };
 
+        AuthService.logout = function () {
+            $http.post('/logout', { _csrf: csrf_token })
+                .success(function() {
+                    console.log('logout: SUCCESS');
+                    $window.location.reload();
+                })
+                .error(function() {
+                    console.log('logout: ERROR');
+                });
+        };
+
         AuthService.createPost = function (post) {
             //TODO:
             //if (!AuthService.isLoggedIn())

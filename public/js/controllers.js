@@ -12,6 +12,23 @@ pastagagControllers.controller('navbarController', ['$scope', '$location', '$mod
             return viewLocation === $location.path();
         };
 
+	$scope.user = {
+	    csrf_token : csrf_token,
+	    isAuthenticated : isAuthenticated,
+	    username : username,
+	    password : password,
+	    email : email
+	};
+
+	$scope.logout = function () {
+	    Auth.logout();
+	};
+
+
+	$scope.signup = function () {
+	    $location.path('#/signup');
+	};
+
         $scope.openUploadModal = function (size) {
 
             var modalInstance = $modal.open({
@@ -57,6 +74,20 @@ pastagagControllers.controller('navbarController', ['$scope', '$location', '$mod
         };
 
     }]);
+
+pastagagControllers.controller('AccountCtrl', ['$scope', 'Post', '$location', function ($scope, Post, $location) {
+
+    
+    
+    // var path = $location.path().substr(1);
+    // $scope.posts = Post.list({}, {param: path});
+
+    // $scope.upvote = function(postId) {
+    // };
+    // $scope.downvote = function(postId) {
+    // };
+}]);
+
 
 pastagagControllers.controller('PostsListCtrl', ['$scope', 'Post', '$location',
     function ($scope, Post, $location) {

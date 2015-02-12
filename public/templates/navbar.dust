@@ -27,6 +27,10 @@
                         <li ng-class="{ active: isActive('/best/day')}"><a href="#/best/day">{@pre type="content" key="score.current_day"/}</a></li>
                     </ul>
                 </li>
+
+
+                <li ng-show="user.isAuthenticated" ng-class="{ active: isActive('/account')}"><a href="#/account"><i class="glyphicon glyphicon-user"></i> {@pre type="content" key="profile"/}</a></li>
+
             </ul>
 
             <ul class="nav navbar-nav navbar-right navbar-form">
@@ -40,7 +44,10 @@
                 </li>
                 <li>
                     <div>
-                        <button type="button" class="btn btn-warning" ng-click="openUploadModal()">{@pre type="content" key="upload"/}</button>
+
+			<span class="welcome-navbar" ng-show="user.isAuthenticated"> Welcome, {user.username}!</span>
+
+                        <button ng-show="user.isAuthenticated" type="button" class="btn btn-warning" ng-click="openUploadModal()">{@pre type="content" key="upload"/}</button>
                         <script type="text/ng-template" id="uploadModalContent">
                             <div class="modal-header">
                                 <h3 class="modal-title">Upload a new Post</h3>
@@ -74,7 +81,17 @@
                 </li>
                 <li>
                     <div>
-                        <button type="button" class="btn btn-warning" ng-click="openLoginModal()">{@pre type="content" key="login"/}</button>
+
+
+                        <button ng-show="!user.isAuthenticated" type="button" class="btn btn-warning" ng-click="openLoginModal()">{@pre type="content" key="login"/}</button>
+
+                        <button ng-show="!user.isAuthenticated" type="button" class="btn btn-warning" ng-click="signup()">{@pre type="content" key="signup"/}</button>
+
+			
+
+
+
+                        <button ng-show="user.isAuthenticated" type="button" class="btn btn-warning" ng-click="logout()">   {@pre type="content" key="logout"/}</button>
                         <script type="text/ng-template" id="loginModalContent">
                             <div class="modal-header">
                                 <h3 class="modal-title">Log in Motherfucka</h3>
