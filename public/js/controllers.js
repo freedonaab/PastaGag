@@ -36,7 +36,7 @@ pastagagControllers.controller('navbarController', ['$scope', '$location', '$mod
 pastagagControllers.controller('PostsListCtrl', ['$scope', 'Post', '$location',
     function ($scope, Post, $location) {
         var path = $location.path().substr(1);
-        pos$scope.posts = Post.list({}, {param: path});
+        $scope.posts = Post.list({}, {param: path});
 
         $scope.upvote = function(postId) {
         };
