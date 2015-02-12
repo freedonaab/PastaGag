@@ -46,24 +46,28 @@ pastagagControllers.controller('navbarController', ['$scope', '$location', '$mod
 
     }]);
 
-pastagagControllers.controller('PostsListCtrl', ['$scope', 'Post', '$location',
-    function ($scope, Post, $location) {
+pastagagControllers.controller('PostsListCtrl', ['$scope', 'Post', '$location', 'Auth',
+    function ($scope, Post, $location, Auth) {
         var path = $location.path().substr(1);
         $scope.posts = Post.list({}, {param: path});
 
         $scope.upvote = function(postId) {
+            Auth.upvotePost(postId);
         };
         $scope.downvote = function(postId) {
+            Auth.downvotePost(postId);
         };
     }]);
 
-pastagagControllers.controller('PostListCtrl', ['$scope', '$http', 'Post', '$routeParams',
-    function ($scope, $http, Post, $routeParams) {
+pastagagControllers.controller('PostListCtrl', ['$scope', '$http', 'Post', '$routeParams', 'Auth',
+    function ($scope, $http, Post, $routeParams, Auth) {
         $scope.post = Post.get({param: $routeParams.id});
 
         $scope.upvote = function(postId) {
+            Auth.upvotePost(postId);
         };
         $scope.downvote = function(postId) {
+            Auth.downvotePost(postId);
         };
         $scope.postComment = function(postId) {
             var comment = angular.element('#comment').val();

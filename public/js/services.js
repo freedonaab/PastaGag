@@ -20,7 +20,7 @@ pastagagServices.factory('Post', ['$resource',
                     isArray: false
                 }
             });
-}]);
+    }]);
 
 
 pastagagServices.factory('Auth', [ '$http', '$location', '$window',
@@ -53,26 +53,46 @@ pastagagServices.factory('Auth', [ '$http', '$location', '$window',
                 data: { post: post },
                 _csrf: csrf_token
             })
-                .success(function() {
+                .success(function () {
                     console.log('createPost: SUCCESS');
                     $window.location.reload();
                 })
-                .error(function() {
+                .error(function () {
                     console.log('createPost: ERROR');
                 });
-
-
-//     $scope.save = function (post) {
-//        if ($scope.newPostForm.$valid) {
-//            post.author_id = "54d4c9c11771a63013614f76";
-//            $http.post('posts/', { post: post })
-//                .success(function() {
-//                    $modalInstance.close();
-//                });
-//        }
-
-
             return AuthService.user != null;
+        };
+
+        AuthService.upvotePost = function (postId) {
+            //TODO:
+            //if (!AuthService.isLoggedIn())
+            //    return;
+
+            $http.post('/posts/' + postId + '/votes/up', {
+                _csrf: csrf_token
+            })
+                .success(function() {
+                    console.log('upvotePost: SUCCESS');
+                })
+                .error(function() {
+                    console.log('upvotePost: ERROR');
+                });
+        };
+
+        AuthService.downvotePost = function (postId) {
+            //TODO:
+            //if (!AuthService.isLoggedIn())
+            //    return;
+
+            $http.post('/posts/' + postId + '/votes/down', {
+                _csrf: csrf_token
+            })
+                .success(function() {
+                    console.log('downvotePost: SUCCESS');
+                })
+                .error(function() {
+                    console.log('downvotePost: ERROR');
+                });
         };
 
         return AuthService;
