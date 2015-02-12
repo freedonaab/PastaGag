@@ -41,11 +41,4 @@ module.exports = function (router) {
         });
     });
 
-    router.post('/login', function (req, res) {
-
-    });
-
-    router.post('/logout', function (req, res) {
-
-    });
 };

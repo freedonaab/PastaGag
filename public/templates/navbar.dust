@@ -62,6 +62,30 @@
                         </script>
                     </div>
                 </li>
+                <li>
+                    <div>
+                        <button type="button" class="btn btn-warning" ng-click="openLoginModal()">{@pre type="content" key="login"/}</button>
+                        <script type="text/ng-template" id="loginModalContent">
+                            <div class="modal-header">
+                                <h3 class="modal-title">Log in Motherfucka</h3>
+                            </div>
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <label for="new-post-text">Username</label>
+                                    <input type="text" ng-model="username" class="form-control" id="login-username" placeholder="Username" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="new-post-url">Password</label>
+                                    <input type="password" ng-model="password" class="form-control" id="login-password" placeholder="Password" />
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-primary" ng-click="ok()">Submit</button>
+                                <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+                            </div>
+                        </script>
+                    </div>
+                </li>
             </ul>
 
         </div><!-- /.navbar-collapse -->

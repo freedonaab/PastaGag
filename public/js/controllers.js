@@ -2,8 +2,8 @@
 
 var pastagagControllers = angular.module('pastagagControllers', []);
 
-pastagagControllers.controller('navbarController', ['$scope', '$location', '$modal',
-    function ($scope, $location, $modal) {
+pastagagControllers.controller('navbarController', ['$scope', '$location', '$modal', 'Auth',
+    function ($scope, $location, $modal, Auth) {
         $scope.isActive = function (viewLocation) {
             var path = $location.path().substr(0, 5);
             if (viewLocation === '/best' && path === '/best') {
@@ -31,6 +31,30 @@ pastagagControllers.controller('navbarController', ['$scope', '$location', '$mod
             }, function () {
             });
         };
+
+        $scope.openLoginModal = function (size) {
+
+            var modalInstance = $modal.open({
+                templateUrl: 'loginModalContent',
+                controller: 'ModalInstanceController',
+                size: size,
+                resolve: {
+                    items: function () {
+                        return $scope.items;
+                    }
+                },
+                backdrop: true
+            });
+
+            modalInstance.result.then(function (modalScope) {
+                console.log(modalScope);
+                console.log(modalScope.username);
+                console.log(modalScope.password);
+                Auth.login(modalScope.username, modalScope.password);
+            }, function () {
+            });
+        };
+
     }]);
 
 pastagagControllers.controller('PostsListCtrl', ['$scope', 'Post', '$location',
@@ -69,8 +93,11 @@ pastagagControllers.controller('PostListCtrl', ['$scope', '$http', 'Post', '$rou
 
 pastagagControllers.controller('ModalInstanceController', function ($scope, $modalInstance) {
 
+    $scope.username = "";
+    $scope.password = "";
+
     $scope.ok = function () {
-        $modalInstance.close();
+        $modalInstance.close($scope);
     };
 
     $scope.cancel = function () {

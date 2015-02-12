@@ -23,6 +23,9 @@ UserSchema.methods.customCreate = function (cb) {
     this.save(cb);
 };
 
+UserSchema.methods.passwordMatches = function (password) {
+    return this.password === password;
+};
 
 //UserSchema.methods.toto = ...
 

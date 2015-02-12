@@ -2,7 +2,7 @@
 
 
 var IndexModel = require('../models/index');
-
+var passport = require('passport');
 
 module.exports = function (router) {
 
@@ -14,7 +14,20 @@ module.exports = function (router) {
             next();
         },
         function (req, res) {
-            res.render('index', model);
+            console.log(res.locals);
+            var user = null;
+            if (res.locals.user) {
+                console.log(res.locals.user.toObject);
+                user = res.locals.user.toObject();
+                delete user._id;
+            }
+            res.render('index', {
+                _csrf: res.locals._csrf,
+                isAuthenticated: req.isAuthenticated().toString(),
+                username: user? user.username : "",
+                password: user? user.password : "",
+                email: user? user.email : ""
+            });
         }
     );
 
@@ -23,5 +36,31 @@ module.exports = function (router) {
             res.send({ _csrf: res.locals._csrf });
         }
     );
+
+    router.post('/login', function (req, res, next) {
+        console.log('POST /login reached!');
+        //passport.authenticate('local', {
+        //    successRedirect: req.session.goingTo || '/',
+        //    failureRedirect: '/',
+        //    failureFlash: false
+        //})(req, res, next);
+        passport.authenticate('local', {
+            successRedirect: req.session.goingTo || '/',
+            failureFlash: false
+        })(req, res, next);
+        //passport.authenticate('local', function (err, user) {
+        //    console.log(arguments);
+        //    if (err) {
+        //        res.status(401).send(err);
+        //    } else {
+        //        res.redirect(req.session.goingTo || '/');
+        //    }
+        //})(req, res, next);
+    });
+
+    router.post('/logout', function (req, res) {
+        req.logout();
+        res.redirect('/');
+    });
 
 };
