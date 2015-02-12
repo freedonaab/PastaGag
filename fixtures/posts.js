@@ -21,7 +21,15 @@ exports.posts = [
                 },
                 message: 'Mdrrrrr'
             }
-        ]
+        ],
+        votes: {
+            hotness: 0,
+            score: {
+                up: 1,
+                down: 0,
+                total: 1
+            }
+        }
     },
     {
         title: 'Super marrant !',
@@ -38,7 +46,15 @@ exports.posts = [
                 },
                 message: 'Mouais'
             }
-        ]
+        ],
+        votes: {
+            hotness: 0,
+            score: {
+                up: 1,
+                down: 0,
+                total: 1
+            }
+        }
     },
     {
         title: 'MDRRRRR !',
@@ -46,6 +62,15 @@ exports.posts = [
         author: {
             _id: '54d4c9c11771a63013614f75',
             username: 'Angelina'
+        },
+        comments: [],
+        votes: {
+            hotness: 0,
+            score: {
+                up: 1,
+                down: 0,
+                total: 1
+            }
         }
     }
 ];

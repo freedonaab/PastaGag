@@ -6,6 +6,7 @@ var _ = require('underscore');
 var utils = require('../../lib/utils');
 var urlCheck = require('../../lib/urlCheck');
 var ranking = require('../../lib/ranking');
+var auth = require('../../lib/auth');
 
 var PostsModel = require('../../models/posts');
 var UsersModel = require('../../models/users');
@@ -15,7 +16,7 @@ module.exports = function (router) {
     router.post('/:post_id/comments/:comment_id/votes/down', function (req, res) {
         var post_id = req.params.post_id;
         var comment_id = req.params.comment_id;
-        var user_id = req.body.data.user_id;
+        var user_id =  res.locals.user ? res.locals.user._id : req.body.data.user_id;
 
         if (!post_id) {
             return utils.respondJSON(res, utils.json.BadRequest('url param post_id is required'));
