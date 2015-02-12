@@ -55,7 +55,7 @@ pastagagServices.factory('Auth', [ '$http', '$location', '$window',
             })
                 .success(function() {
                     console.log('createPost: SUCCESS');
-                    //$window.location.reload();
+                    $window.location.reload();
                 })
                 .error(function() {
                     console.log('createPost: ERROR');
