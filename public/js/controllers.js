@@ -67,13 +67,19 @@ pastagagControllers.controller('PostListCtrl', ['$scope', '$http', 'Post', '$rou
         };
     }]);
 
-pastagagControllers.controller('ModalInstanceController', function ($scope, $modalInstance) {
+pastagagControllers.controller('ModalInstanceController', function ($scope, $modalInstance, $http) {
 
-    $scope.ok = function () {
-        $modalInstance.close();
+    $scope.save = function (post) {
+        if ($scope.newPostForm.$valid) {
+            post.author_id = "54d4c9c11771a63013614f76";
+            $http.post('posts/', { post: post })
+                .success(function() {
+                    $modalInstance.close();
+                });
+        }
     };
 
-    $scope.cancel = function () {
+    $scope.dismiss = function () {
         $modalInstance.dismiss('cancel');
     };
 });
