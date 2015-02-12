@@ -1,1 +1,74 @@
 @import "../components/bootstrap-sass-official/assets/stylesheets/bootstrap";
+$fa-font-path: "../components/components-font-awesome/fonts";
+@import "../components/components-font-awesome/scss/font-awesome";
+
+body {
+  padding-top: 50px;
+}
+
+.right {
+  float: right;
+}
+
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 0;
+  background-color: #000;
+}
+
+.navbar-nav {
+  button {
+    margin-left: 10px;
+  }
+}
+
+.postsList, .postList{
+  .item {
+    margin: 0 auto;
+    width: 50%;
+    img {
+      width: 100%;
+      margin-bottom: 5px;
+    }
+    .btn-lg {
+      font-size: 1.5em;
+    }
+  }
+}
+
+.postList {
+  .comment {
+    overflow: auto;
+    width: 100%;
+  }
+}
+
+.footer {
+  clear: both;
+}
+
+@media (min-width: 765px) {
+  .navbar {
+    .container {
+      width: 100%;
+    }
+  }
+}
+@media (min-width: 992px) {
+  .navbar {
+    .container {
+      width: 970px;
+    }
+  }
+}
+@media (min-width: 1200px) {
+  .navbar {
+    .container {
+      width: 1170px;
+    }
+  }
+}

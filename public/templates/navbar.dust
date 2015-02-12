@@ -1,50 +1,69 @@
-<div class="navbar">
-    <div class="navbar-inner">
-        <div class="container">
-            <!-- Note: set the initial collapsed state and change it when clicking -->
-            <a ng-init="navCollapsed = true" ng-click="navCollapsed = !navCollapsed" class="btn btn-navbar">
+<nav ng-controller="navbarController" class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+
+            <button type="button" class="navbar-toggle" ng-init="navCollapsed = true" ng-click="navCollapsed = !navCollapsed">
+                <span class="sr-only">Toggle navigation</span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
-            </a>
-            <a class="brand" href="#">Title</a>
-            <!-- Note: use "collapse" here. The original "data-" settings are not needed anymore. -->
-            <div collapse="navCollapsed" class="nav-collapse collapse navbar-responsive-collapse">
-                <ul class="nav">
-                    <li class="active"><a href="#">Home</a></li>
-                    <li><a href="#">Link</a></li>
-                    <li><a href="#">Link</a></li>
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <b class="caret"></b></a>
-                        <ul class="dropdown-menu">
-                            <li><a href="#">Action</a></li>
-                            <li><a href="#">Another action</a></li>
-                            <li><a href="#">Something else here</a></li>
-                            <li class="divider"></li>
-                            <li class="nav-header">Nav header</li>
-                            <li><a href="#">Separated link</a></li>
-                            <li><a href="#">One more separated link</a></li>
-                        </ul>
-                    </li>
-                </ul>
-                <form class="navbar-search pull-left" action="">
-                    <input type="text" class="search-query span2" placeholder="Search">
-                </form>
-                <ul class="nav pull-right">
-                    <li><a href="#">Link</a></li>
-                    <li class="divider-vertical"></li>
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <b class="caret"></b></a>
-                        <ul class="dropdown-menu">
-                            <li><a href="#">Action</a></li>
-                            <li><a href="#">Another action</a></li>
-                            <li><a href="#">Something else here</a></li>
-                            <li class="divider"></li>
-                            <li><a href="#">Separated link</a></li>
-                        </ul>
-                    </li>
-                </ul>
-            </div><!-- /.nav-collapse -->
-        </div> <!-- /.container -->
-    </div><!-- /navbar-inner -->
-</div><!-- /navbar -->
+            </button>
+            <a class="navbar-brand" href="#/posts">PastaGag</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" ng-class="!navCollapsed && 'in'" ng-click="navCollapsed=true">
+            <ul class="nav navbar-nav">
+                <li ng-class="{ active: isActive('/')}"><a href="#/posts"><i class="glyphicon glyphicon-fire"></i> {@pre type="content" key="hot"/}</a></li>
+                <li ng-class="{ active: isActive('/new')}"><a href="#/new"><i class="glyphicon glyphicon-time"></i> {@pre type="content" key="recent"/}</a></li>
+
+                <li ng-class="{ active: isActive('/best')}" class="dropdown" dropdown>
+                    <a href="#" class="dropdown-toggle" dropdown-toggle><i class="glyphicon glyphicon-star"></i> {@pre type="content" key="score.by_score"/}<b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li ng-class="{ active: isActive('/best/ever')}"><a href="#/best/ever">{@pre type="content" key="score.all_time"/}</a></li>
+                        <li ng-class="{ active: isActive('/best/month')}"><a href="#/best/month">{@pre type="content" key="score.current_month"/}</a></li>
+                        <li ng-class="{ active: isActive('/best/week')}"><a href="#/best/week">{@pre type="content" key="score.current_week"/}</a></li>
+                        <li ng-class="{ active: isActive('/best/day')}"><a href="#/best/day">{@pre type="content" key="score.current_day"/}</a></li>
+                    </ul>
+                </li>
+            </ul>
+
+            <ul class="nav navbar-nav navbar-right navbar-form">
+                <li class="input-group">
+                    <div>
+                        <input type="text" class="form-control" placeholder="{@pre type="content" key="search"/}">
+                        <span class="input-group-btn">
+                        <button class="btn btn-default" type="button">{@pre type="content" key="submit"/}</button>
+                        </span>
+                    </div>
+                </li>
+                <li>
+                    <div>
+                        <button type="button" class="btn btn-warning" ng-click="openUploadModal()">{@pre type="content" key="upload"/}</button>
+                        <script type="text/ng-template" id="uploadModalContent">
+                            <div class="modal-header">
+                                <h3 class="modal-title">Upload a new Post</h3>
+                            </div>
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <label for="new-post-text">Title</label>
+                                    <input type="text" class="form-control" id="new-post-text" placeholder="Enter a title" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="new-post-url">Content Url</label>
+                                    <input type="url" class="form-control" id="new-post-url" placeholder="Content URL" />
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-primary" ng-click="ok()">OK</button>
+                                <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+                            </div>
+                        </script>
+                    </div>
+                </li>
+            </ul>
+
+        </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+</nav>

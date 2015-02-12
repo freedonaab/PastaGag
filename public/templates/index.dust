@@ -1,7 +1,8 @@
 {>"layouts/master" /}
 
-{<content}
-    <h1>{@pre type="content" key="greeting"/}</h1>
-    <p>1 + 2 = {{ 1 + 3 }}</p>
-    <p>{_csrf}</p>
-{/content}
+{<pageHeader}
+{/pageHeader}
+
+{<pageContent}
+    <div ng-view></div>
+{/pageContent}

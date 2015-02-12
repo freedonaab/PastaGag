@@ -6,11 +6,13 @@
     <link rel="stylesheet" href="/css/app.css" />
 </head>
 <body ng-app="pastagagApp">
-<div class="page">
+<header>
     {>navbar/}
-    <h1>{+pageHeader}Hello{/pageHeader}</h>
-        <div class="bodyContent">
-            {+bodyContent/}
+</header>
+<div class="page container">
+    <h1>{+pageHeader}{/pageHeader}</h1>
+        <div class="content">
+            {+pageContent/}
         </div>
         <div class="footer">
             {+pageFooter}
@@ -19,6 +21,7 @@
             {/pageFooter}
         </div>
 </div>
+<script src="/components/jquery/dist/jquery.js"></script>
 <script src="/js/app.js"></script>
 </body>
 </html>
