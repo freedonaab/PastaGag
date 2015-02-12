@@ -109,8 +109,8 @@ module.exports = function (router) {
                                     _global.votedDown = true;
                                 }
                                 // TODO Those variables are undefined
-//                                _global.post.votes.user_voted_up = _global.votedUp;
-//                                _global.post.votes.user_voted_down = _global.votedDown;
+                                _global.post.votes.user_voted_up = _global.votedUp;
+                                _global.post.votes.user_voted_down = _global.votedDown;
                                 next(null);
                             }
                         ], next);
@@ -260,8 +260,8 @@ module.exports = function (router) {
                 if (down_vote) {
                     _global.votedDown = true;
                 }
-//                _global.post.votes.user_voted_up = _global.votedUp;
-//                _global.post.votes.user_voted_down = _global.votedDown;
+                _global.post.votes.user_voted_up = _global.votedUp;
+                _global.post.votes.user_voted_down = _global.votedDown;
                 next(null);
             }
         ], function (err) {
