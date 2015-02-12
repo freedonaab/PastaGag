@@ -6,6 +6,7 @@ var _ = require('underscore');
 var utils = require('../../lib/utils');
 var urlCheck = require('../../lib/urlCheck');
 var ranking = require('../../lib/ranking');
+var auth = require('../../lib/auth');
 
 var PostsModel = require('../../models/posts');
 var UsersModel = require('../../models/users');
@@ -17,12 +18,12 @@ module.exports = function (router) {
     //router.post('/:post_id/comments/:comment_id'); //-> reply to comment :comment_id on post :post_id
     //router.del('/:post_id/comments/:comment_id'); //-> delete comment :comment_id on post :post_id
 
-    router.post('/:post_id/comments', function (req, res) {
+    router.post('/:post_id/comments', auth.isAuthenticated(null, false), function (req, res) {
 
         var post_id = req.params.post_id;
 
         //TODO: get author_id from session instead of user datas
-        var author_id = req.body.data.author_id;
+        var author_id =  res.locals.user ? res.locals.user._id : req.body.data.author_id;
         var message = req.body.data.message;
         if (!message) {
             return utils.respondJSON(res, utils.json.badRequest('field mesage is required'));
@@ -149,12 +150,12 @@ module.exports = function (router) {
         _recurs(post.comments[0], 0);
     };
 
-    router.post('/:post_id/comments/:comment_id/reply', function (req, res) {
+    router.post('/:post_id/comments/:comment_id/reply',  auth.isAuthenticated(null, false), function (req, res) {
 
         var post_id = req.params.post_id;
 
         //TODO: get author_id from session instead of user datas
-        var author_id = req.body.data.author_id;
+        var author_id =  res.locals.user ? res.locals.user._id : req.body.data.author_id;
         var message = req.body.data.message;
         if (!message) {
             return utils.respondJSON(res, utils.json.badRequest('field mesage is required'));
@@ -254,9 +255,9 @@ module.exports = function (router) {
 
     });
 
-    router.delete('/:post_id/comments/:comment_id', function (req, res) {
+    router.delete('/:post_id/comments/:comment_id', auth.isAuthenticated(null, false), function (req, res) {
         //TODO: get author_id from session instead of user datas
-        var user_id = req.body.data.user_id;
+        var user_id =  res.locals.user ? res.locals.user._id : req.body.data.user_id;
 
         var post_id = req.params.post_id;
         var comment_id = req.params.comment_id;
