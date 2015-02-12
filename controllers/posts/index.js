@@ -6,6 +6,7 @@ var _ = require('underscore');
 var utils = require('../../lib/utils');
 var urlCheck = require('../../lib/urlCheck');
 var ranking = require('../../lib/ranking');
+var auth = require('../../lib/auth');
 
 var PostsModel = require('../../models/posts');
 var UsersModel = require('../../models/users');
@@ -16,8 +17,6 @@ var votesCommentsRouter = require('./votes_comments');
 
 
 module.exports = function (router) {
-
-
 
     var _generateQueryObjectFromOptions = function (query, options) {
         if (options.type === 'new') {
@@ -109,9 +108,8 @@ module.exports = function (router) {
                                 if (down_vote) {
                                     _global.votedDown = true;
                                 }
-                                // TODO Those variables are undefined
-//                                _global.post.votes.user_voted_up = _global.votedUp;
-//                                _global.post.votes.user_voted_down = _global.votedDown;
+                                _global.post.votes.user_voted_up = _global.votedUp;
+                                _global.post.votes.user_voted_down = _global.votedDown;
                                 next(null);
                             }
                         ], next);
@@ -261,8 +259,8 @@ module.exports = function (router) {
                 if (down_vote) {
                     _global.votedDown = true;
                 }
-//                _global.post.votes.user_voted_up = _global.votedUp;
-//                _global.post.votes.user_voted_down = _global.votedDown;
+                _global.post.votes.user_voted_up = _global.votedUp;
+                _global.post.votes.user_voted_down = _global.votedDown;
                 next(null);
             }
         ], function (err) {
@@ -275,7 +273,7 @@ module.exports = function (router) {
 
     });
 
-    router.post('/', function (req, res) {
+    router.post('/', auth.isAuthenticated(null, false), function (req, res) {
         var post_datas = null;
         if (req.body.data && req.body.data.post) {
             post_datas = req.body.data.post;
@@ -299,7 +297,8 @@ module.exports = function (router) {
             function (next) {
                 //check if author_id exists
                 //TODO optimize this query and only select _id and username
-                UsersModel.findById(post_datas.author_id, function (err, doc) {
+                var user_id =  res.locals.user ? res.locals.user._id : post_datas.author_id;
+                UsersModel.findById(user_id, function (err, doc) {
                     //console.log('after UsersModel.findById', arguments);
                     if (err) {
                         next(utils.json.ServerError('error occured in mongodb : '+err));

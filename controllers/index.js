@@ -24,9 +24,9 @@ module.exports = function (router) {
             res.render('index', {
                 _csrf: res.locals._csrf,
                 isAuthenticated: req.isAuthenticated().toString(),
-                username: user? user.username : "",
-                password: user? user.password : "",
-                email: user? user.email : ""
+                username: user? user.username : '',
+                password: user? user.password : '',
+                email: user? user.email : ''
             });
         }
     );

@@ -2,6 +2,10 @@
 $fa-font-path: "../components/components-font-awesome/fonts";
 @import "../components/components-font-awesome/scss/font-awesome";
 
+.welcome-navbar {
+    margin-left : 10px;
+}
+
 body {
   padding-top: 50px;
 }

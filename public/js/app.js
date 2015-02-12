@@ -58,8 +58,8 @@ pastagagApp.config(['$routeProvider',
                 controller: 'PostListCtrl'
             }).
             when('/account', {
-                templateUrl: 'layouts/master.dust',
-                controller: 'PostsListCtrl'
+                templateUrl: 'templates/account.dust',
+                controller: 'AccountCtrl'
             }).
             when('/login', {
                 templateUrl: 'layouts/master.dust',
