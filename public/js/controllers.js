@@ -105,6 +105,8 @@ pastagagControllers.controller('PostListCtrl', ['$scope', '$http', 'Post', '$rou
     function ($scope, $http, Post, $routeParams) {
         $scope.post = Post.get({param: $routeParams.id});
 
+	console.log($scope.post);
+
         $scope.upvote = function(postId) {
         };
         $scope.downvote = function(postId) {
