@@ -109,6 +109,8 @@ pastagagControllers.controller('PostListCtrl', ['$scope', '$http', 'Post', '$rou
 
         console.log($scope.post);
 
+	$scope.comment = "";
+
         $scope.upvote = function(postId) {
             Auth.upvotePost(postId);
         };
@@ -121,7 +123,7 @@ pastagagControllers.controller('PostListCtrl', ['$scope', '$http', 'Post', '$rou
 
 
 	    var data = {
-                message: comment,
+		data : {message: comment},
                 _csrf : csrf_token
             };
 	    console.log("data = ", data);
@@ -131,7 +133,9 @@ pastagagControllers.controller('PostListCtrl', ['$scope', '$http', 'Post', '$rou
             if (comment !== "") {
                 $http.post('posts/' + postId + '/comments', data)
                     .success(function(data) {
-                    $scope.phones = data;
+			$scope.phones = data;
+			$scope.post = Post.get({param: $routeParams.id});
+			$scope.comment = "";
                 });
             }
         };
