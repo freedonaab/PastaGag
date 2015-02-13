@@ -12,6 +12,7 @@
                 <span class="fa fa-frown-o" aria-hidden="true"></span>
             </button>
         </div>
+        <span style="font-size: 30px; color: blue; padding-left: 10px;">{{post.votes.score.total}}</span>
         <a class="btn btn-default btn-lg right" href="#/posts/{{ post._id }}">
             <span class="glyphicon glyphicon glyphicon-comment" aria-hidden="true"></span>
         </a>

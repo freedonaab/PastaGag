@@ -198,7 +198,7 @@ module.exports = function (router) {
     router.get('/:post_id', function (req, res) {
 
         var post_id = req.params.post_id;
-        var user_id = req.query.user_id || null;
+        var user_id =  res.locals.user ? res.locals.user._id : req.query.user_id;
 
         if (!post_id) {
             return utils.respondJSON(res, utils.json.BadRequest('url param post_id is required'));
