@@ -28,8 +28,12 @@ exports.posts = [
                 up: 1,
                 down: 0,
                 total: 1
-            }
-        }
+            },
+            ups: ["54d4c9c11771a63013614f75"],
+            downs: []
+        },
+        created_at: "2012-04-23T18:25:43.511Z",
+        updated_at: "2012-04-23T18:25:43.511Z"
     },
     {
         title: 'Super marrant !',
@@ -53,8 +57,12 @@ exports.posts = [
                 up: 1,
                 down: 0,
                 total: 1
-            }
-        }
+            },
+            ups: ["54d4c9c11771a63013614f75"],
+            downs: []
+        },
+        created_at: "2012-04-23T18:25:43.511Z",
+        updated_at: "2012-04-23T18:25:43.511Z"
     },
     {
         title: 'MDRRRRR !',
@@ -70,7 +78,11 @@ exports.posts = [
                 up: 1,
                 down: 0,
                 total: 1
-            }
-        }
+            },
+            ups: ["54d4c9c11771a63013614f75"],
+            downs: []
+        },
+        created_at: "2012-04-23T18:25:43.511Z",
+        updated_at: "2012-04-23T18:25:43.511Z"
     }
 ];
