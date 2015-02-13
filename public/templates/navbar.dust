@@ -87,7 +87,7 @@
 
                         <button ng-show="!user.isAuthenticated" type="button" class="btn btn-warning" ng-click="signup()">{@pre type="content" key="signup"/}</button>
 
-			
+
 
 
 
@@ -97,25 +97,6 @@
                                 <h3 class="modal-title">Log in Motherfucka</h3>
                             </div>
                             <div class="modal-body">
-
-				<form name="loginForm" novalidate="">
-				                                    <div class="modal-body">
-				                                        <div class="form-group" ng-class="{true: 'has-error'}[loginForm.$submitted && loginForm.username.$error.required]">
-				                                            <label class="control-label" for="new-user-username">Username</label>
-				                                            <div class="controls">
-				                                                <input type="text" class="form-control" id="new-user-username" name="username" ng-model="user.username" placeholder="Enter a username" required/>
-				                                                <span class="help-block" ng-show="loginForm.$submitted && loginForm.username.$error.required">A username is required :(</span>
-				                                            </div>
-				                                        </div>
-				    
-				                                        <div class="form-group" ng-class="{true: 'has-error'}[loginForm.$submitted && loginForm.password.$error.required]">
-				                                            <label class="control-label" for="new-user-password">Password</label>
-				                                            <div class="controls">
-				                                                <input type="password" class="form-control" id="new-user-password" name="password" ng-model="user.password" placeholder="Enter a password" required/>
-				                                                <span class="help-block" ng-show="loginForm.$submitted && loginForm.password.$error.required">A password is required :(</span>
-				                                            </div>
-				                                        </div>				
-
                                 <div class="form-group">
                                     <label for="new-post-text">Username</label>
                                     <input type="text" ng-model="username" class="form-control" id="login-username" placeholder="Username" />
