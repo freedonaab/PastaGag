@@ -103,9 +103,11 @@ pastagagControllers.controller('PostsListCtrl', ['$scope', 'Post', '$location', 
         };
     }]);
 
-pastagagControllers.controller('PostListCtrl', ['$scope', '$http', 'Post', '$routeParams',
-    function ($scope, $http, Post, $routeParams) {
+pastagagControllers.controller('PostListCtrl', ['$scope', '$http', 'Post', '$routeParams', 'Auth',
+    function ($scope, $http, Post, $routeParams, Auth) {
         $scope.post = Post.get({param: $routeParams.id});
+
+        console.log($scope.post);
 
         $scope.upvote = function(postId) {
             Auth.upvotePost(postId);
