@@ -16,9 +16,9 @@
         </div>
         <hr>
         <form name="post-comment-form">
-            <textarea ng-model="comment" id="comment" class="form-control" rows="3" placeholder="{@pre type="content" key="write_comment"/}." required=""></textarea>
+            <textarea ng-model="comment" id="comment" class="form-control" rows="3" placeholder="" required=""></textarea>
             <button type="button" class="btn btn-primary right" ng-disabled="!comment">
-                <span class="fa fa-comment" aria-hidden="true" ng-click="postComment(post._id)"> {@pre type="content" key="post_comment"/}</span>
+                <span class="fa fa-comment" aria-hidden="true" ng-click="postComment(post._id, comment)"> Post comment</span>
             </button>
         </form>
         <br/>

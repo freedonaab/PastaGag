@@ -115,14 +115,21 @@ pastagagControllers.controller('PostListCtrl', ['$scope', '$http', 'Post', '$rou
         $scope.downvote = function(postId) {
             Auth.downvotePost(postId);
         };
-        $scope.postComment = function(postId) {
+        $scope.postComment = function(postId, comment) {
+	    console.log("postId = ", postId);
+	    console.log("comment = ", comment);
+
+
+	    var data = {
+                message: comment,
+                _csrf : csrf_token
+            };
+	    console.log("data = ", data);
+
+
             var comment = angular.element('#comment').val();
             if (comment !== "") {
-                $http.post('posts/' + postId + '/comments',
-                    {
-                        message: comment
-                    }
-                )
+                $http.post('posts/' + postId + '/comments', data)
                     .success(function(data) {
                     $scope.phones = data;
                 });

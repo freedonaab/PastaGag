@@ -22,6 +22,33 @@ pastagagServices.factory('Post', ['$resource',
             });
     }]);
 
+pastagagServices.factory('Comment', ['$resource',
+    function($resource){
+        return $resource('posts/:post_id/comments',
+            {param: "@param"},
+            {
+                list: {
+                    method: 'GET',
+                    params: {},
+                    transformResponse: function (data) {return angular.fromJson(data).data.posts},
+                    isArray: true
+                },
+                get: {
+                    method: 'GET',
+                    params: {},
+                    transformResponse: function (data) {return angular.fromJson(data).data.post},
+                    isArray: false
+                },
+                post: {
+                    method: 'POST',
+                    params: {},
+                    transformResponse: function (data) {return angular.fromJson(data).data.post},
+                    isArray: false
+                }
+
+            });
+    }]);
+
 
 pastagagServices.factory('Auth', [ '$http', '$location', '$window',
     function ($http, $location, $window) {
