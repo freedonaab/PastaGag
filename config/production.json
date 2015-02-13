@@ -1,0 +1,76 @@
+{
+
+    "express": {
+        "view engine": "dust",
+        "views": "path:./public/templates"
+    },
+
+    "view engines": {
+        "dust": {
+            "module": "engine-munger",
+            "renderer": {
+                "method": "dust",
+                "arguments": [
+                    {
+                        "views": "config:express.views",
+                        "view engine": "config:express.view engine",
+                        "specialization": "config:specialization",
+                        "i18n": "config:i18n"
+                    }
+                ]
+            }
+        }
+    },
+
+    "i18n": {
+        "contentPath": "path:./locales",
+        "fallback": "en-US"
+    },
+
+    "database": {
+        "type": "mongodb",
+        "mongodb": {
+            "url": "mongodb://heroku_app33932939:nq10dmf1ernsd7kmk2v1nn0cg9@ds037551.mongolab.com:37551/heroku_app33932939"
+        }
+    },
+
+    "fixtures_path": "./../fixtures/",
+
+    "middleware": {
+
+        "devtools": {
+            "enabled": true,
+            "priority": 35,
+            "module": {
+                "name": "kraken-devtools",
+                "arguments": [
+                    "path:./public",
+                    "path:./.build",
+                    {
+                        "template": {
+                            "module": "kraken-devtools/plugins/dustjs",
+                            "files": "/templates/**/*.js",
+                            "base": "templates",
+                            "i18n": "config:i18n"
+                        },
+
+                        "css": {
+                            "module": "kraken-devtools/plugins/sass",
+                            "files": "/css/**/*.css"
+                        },
+
+                        "browserify": {
+                            "module": "kraken-devtools-browserify",
+                            "files": "/js/**/*.js"
+                        },
+
+                        "copier": {
+                            "module": "kraken-devtools/plugins/copier",
+                            "files": "**/*"
+                        }
+                    }
+                ]
+            }
+        }
+    }
+}

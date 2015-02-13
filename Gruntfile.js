@@ -12,5 +12,5 @@ module.exports = function (grunt) {
     grunt.registerTask('build', [ 'jshint', 'sass', 'browserify', 'i18n', 'copyto' ]);
     grunt.registerTask('debug-cli', [ 'jshint', 'sass', 'i18n', 'copyto' ]);
     grunt.registerTask('test', [ 'jshint', 'mochacli' ]);
-
+    grunt.registerTask('heroku:production', 'build');
 };
