@@ -22,7 +22,6 @@ module.exports = function (router) {
 
         var post_id = req.params.post_id;
 
-        //TODO: get author_id from session instead of user datas
         var author_id =  res.locals.user ? res.locals.user._id : req.body.data.author_id;
         var message = req.body.data.message;
         if (!message) {
